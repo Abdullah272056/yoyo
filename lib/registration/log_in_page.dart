@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:aws_exam_portal/registration/sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
+import '../gradiant_icon.dart';
 
 
 
@@ -69,7 +72,20 @@ class _LogInScreenState extends State<LogInScreen> {
                   _buildTextFieldPhone(
                     // hintText: 'Phone Number',
                     obscureText: false,
-                    prefixedIcon: const Icon(Icons.phone, color: Colors.appRed),
+                    prefixedIcon:  GradientIcon(
+                      Icons.phone,
+                      26,
+                      LinearGradient(
+                        colors: <Color>[
+                          Colors.awsStartColor,
+                          Colors.awsStartColor,
+                          Colors.awsEndColor,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    // prefixedIcon: const Icon(Icons.phone, color: Colors.appRed),
                     labelText: "Phone Number",
                   ),
                   const SizedBox(
@@ -84,7 +100,24 @@ class _LogInScreenState extends State<LogInScreen> {
                   _buildTextFieldPassword(
                     // hintText: 'Password',
                     obscureText: true,
-                    prefixedIcon: const Icon(Icons.lock, color: Colors.appRed),
+                    prefixedIcon:
+                    GradientIcon(
+                      Icons.lock,
+                      26,
+                      const LinearGradient(
+                        colors: <Color>[
+                          Colors.awsStartColor,
+                          Colors.awsStartColor,
+                          Colors.awsEndColor,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    )
+
+
+
+                    ,
                     labelText: "Password",
                   ),
                   const SizedBox(
@@ -245,7 +278,7 @@ class _LogInScreenState extends State<LogInScreen> {
     );
   }
 
-  Widget _buildLoginButton() {
+  Widget _buildLoginButton1() {
     return SizedBox(
       height: 50,
       width: double.infinity,
@@ -286,6 +319,40 @@ class _LogInScreenState extends State<LogInScreen> {
     );
   }
 
+  Widget _buildLoginButton() {
+    return SizedBox(
+      height: 50.0,
+      child: RaisedButton(
+        onPressed: () {},
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+        padding: EdgeInsets.all(0.0),
+        child: Ink(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [Colors.awsStartColor, Colors.awsEndColor],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+              borderRadius: BorderRadius.circular(10.0)
+          ),
+          child: Container(
+            constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
+            alignment: Alignment.center,
+            child: Text(
+              "Login",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'PT-Sans',
+                fontSize: 18,
+                fontWeight: FontWeight.normal,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildSignUpQuestion() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -309,8 +376,8 @@ class _LogInScreenState extends State<LogInScreen> {
             ),
           ),
           onTap: () {
-            // Navigator.push(context,
-            //     MaterialPageRoute(builder: (context) => SignUpScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => SignUpScreen()));
           },
         ),
       ],
@@ -658,3 +725,5 @@ class _LogInScreenState extends State<LogInScreen> {
 
 
 }
+
+
