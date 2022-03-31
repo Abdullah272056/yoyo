@@ -8,6 +8,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
 
+import 'new_password_set.dart';
+
 
 class VerificationResetPasswordScreen extends StatefulWidget {
   final String userId;
@@ -209,6 +211,11 @@ class _VerificationResetPasswordState
     return ElevatedButton(
         onPressed: () {
           if (_otpTxt.isNotEmpty) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        NewPasswordSetScreen("12")));
             // _verifyAfterResetPassword(user_id: userId, otp_code: _otpTxt);
           }
           else if (_otpTxt.length < 6) {
@@ -250,7 +257,6 @@ class _VerificationResetPasswordState
       ),
     );
   }
-
 
   Widget _buildVerifyQuestion() {
     return Column(
