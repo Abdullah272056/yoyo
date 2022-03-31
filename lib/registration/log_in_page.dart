@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:aws_exam_portal/background/background.dart';
 import 'package:aws_exam_portal/registration/sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,132 +37,127 @@ class _LogInScreenState extends State<LogInScreen> {
         body: SizedBox(
           width: double.infinity,
           height: double.infinity,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 40,
-              ).copyWith(top: 60),
-              child: Column(
-                children: [
-                  Padding(
+          child: Stack(
+            children: [
+              Background(),
+              Center(
+                child: SingleChildScrollView(
+                  child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 30,
-                    ),
+                      horizontal: 40,
+                    ).copyWith(top: 20),
                     child: Column(
                       children: [
-                        Image.asset(
-                          "assets/images/aws.png",
-                          width: 180,
-                          height: 90,
-                        )
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                          ),
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                "assets/images/aws.png",
+                                width: 160,
+                                height: 80,
+                              )
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(
+                          height: 40,
+                        ),
+
+                        //phone number input
+                        _buildTextFieldPhone(
+                          // hintText: 'Phone Number',
+                          obscureText: false,
+                          prefixedIcon:  GradientIcon(
+                            Icons.phone,
+                            26,
+                            LinearGradient(
+                              colors: <Color>[
+                                Colors.awsStartColor,
+                                Colors.awsStartColor,
+                                Colors.awsEndColor,
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                          ),
+                          // prefixedIcon: const Icon(Icons.phone, color: Colors.appRed),
+                          labelText: "Phone Number",
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+
+
+
+                        //password input
+                        _buildTextFieldPassword(
+                          // hintText: 'Password',
+                          obscureText: true,
+                          prefixedIcon:
+                          GradientIcon(
+                            Icons.lock,
+                            26,
+                            const LinearGradient(
+                              colors: <Color>[
+                                Colors.awsStartColor,
+                                Colors.awsStartColor,
+                                Colors.awsEndColor,
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                          )
+                          ,
+                          labelText: "Password",
+                        ),
+
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        _buildLoginButton(),
+                        const SizedBox(
+                          height: 20,
+                        ),
+
+                        InkWell(
+                          child: const Text(
+                            'Forgot Password',
+                            style: TextStyle(
+                              fontFamily: 'PT-Sans',
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.awsMixedColor,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ForgetPasswordScreen()));
+                          },
+                        ),
+
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        _buildSignUpQuestion(),
+                        const SizedBox(
+                          height: 15,
+                        ),
                       ],
                     ),
                   ),
+                ),
+              )
 
-                  const SizedBox(
-                    height: 30,
-                  ),
+            ],
+          )
 
-                  const SizedBox(
-                    height: 30,
-                  ),
-
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  //phone number input
-                  _buildTextFieldPhone(
-                    // hintText: 'Phone Number',
-                    obscureText: false,
-                    prefixedIcon:  GradientIcon(
-                      Icons.phone,
-                      26,
-                      LinearGradient(
-                        colors: <Color>[
-                          Colors.awsStartColor,
-                          Colors.awsStartColor,
-                          Colors.awsEndColor,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    // prefixedIcon: const Icon(Icons.phone, color: Colors.appRed),
-                    labelText: "Phone Number",
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-
-                  const SizedBox(
-                    height: 10,
-                  ),
-
-                  //password input
-                  _buildTextFieldPassword(
-                    // hintText: 'Password',
-                    obscureText: true,
-                    prefixedIcon:
-                    GradientIcon(
-                      Icons.lock,
-                      26,
-                      const LinearGradient(
-                        colors: <Color>[
-                          Colors.awsStartColor,
-                          Colors.awsStartColor,
-                          Colors.awsEndColor,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    )
-
-
-
-                    ,
-                    labelText: "Password",
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-
-                  const SizedBox(
-                    height: 35,
-                  ),
-                  _buildLoginButton(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-
-                  InkWell(
-                    child: const Text(
-                      'Forgot Password',
-                      style: TextStyle(
-                        fontFamily: 'PT-Sans',
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ForgetPasswordScreen()));
-                    },
-                  ),
-
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  _buildSignUpQuestion(),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                ],
-              ),
-            ),
-          ),
+          ,
         ),
       ),
     );
@@ -172,6 +168,13 @@ class _LogInScreenState extends State<LogInScreen> {
   void initState() {
     super.initState();
 
+  }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print("AppLifecycleState changed: $state");
+    if (state == AppLifecycleState.resumed) {
+      _showToast("resumed");
+    }
   }
 
 
@@ -185,7 +188,7 @@ class _LogInScreenState extends State<LogInScreen> {
     return Container(
       color: Colors.transparent,
       child: TextField(
-        cursorColor: Colors.appRed,
+        cursorColor: Colors.awsCursorColor,
         cursorWidth: 1.5,
         controller: phoneNumberController,
         textInputAction: TextInputAction.next,
@@ -234,7 +237,7 @@ class _LogInScreenState extends State<LogInScreen> {
       color: Colors.transparent,
       child: TextField(
         controller: passwordController,
-        cursorColor: Colors.appRed,
+        cursorColor: Colors.awsCursorColor,
         cursorWidth: 1.5,
 
         obscureText: _isObscure,
@@ -246,7 +249,7 @@ class _LogInScreenState extends State<LogInScreen> {
           // labelText: 'Password',
           contentPadding: const EdgeInsets.all(15),
           suffixIcon: IconButton(
-              color: Colors.appRed,
+              color: Colors.awsColor,
               icon: GradientIcon(
                 _isObscure ? Icons.visibility_off : Icons.visibility,
                 26,
@@ -296,9 +299,17 @@ class _LogInScreenState extends State<LogInScreen> {
 
   Widget _buildLoginButton() {
     return ElevatedButton(
-      onPressed: () {
-        print('Hi there');
-      },
+        onPressed: () {
+          String phoneTxt = phoneNumberController!.text;
+          String passwordTxt = passwordController!.text;
+          if (_inputValid(phoneTxt, passwordTxt) == false) {
+            _showToast("call login user");
+           // _logInUser(phoneTxt, passwordTxt);
+
+            // Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const NavigationBarScreen()));
+          } else {}
+          //Navigator.push(context,MaterialPageRoute(builder: (context)=>SignUpScreen()));
+        },
       style: ElevatedButton.styleFrom(
           padding: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
@@ -485,22 +496,27 @@ class _LogInScreenState extends State<LogInScreen> {
   _inputValid(String phone, String password) {
     if (phone.isEmpty) {
       Fluttertoast.cancel();
-      _showToast("phone can't empty");
+      _showToast("Phone can't empty");
       return;
     }
     if (phone.length < 8) {
       Fluttertoast.cancel();
-      _showToast("phone can't smaller than 8 digit");
+      _showToast("Phone can't smaller than 8 digit");
       return;
     }
     if (phone.length > 13) {
       Fluttertoast.cancel();
-      _showToast("phone can't bigger than 13 digit");
+      _showToast("Phone can't bigger than 13 digit");
       return;
     }
     if (password.isEmpty) {
       Fluttertoast.cancel();
-      _showToast("password can't empty");
+      _showToast("Password can't empty");
+      return;
+    }
+    if (password.length < 8) {
+      Fluttertoast.cancel();
+      _showToast("Password can't smaller than 8 digit");
       return;
     }
 
@@ -574,7 +590,7 @@ class _LogInScreenState extends State<LogInScreen> {
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.awsMixedColor,
         textColor: Colors.white,
         fontSize: 16.0);
   }

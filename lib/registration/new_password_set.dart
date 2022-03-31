@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:aws_exam_portal/background/background.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -73,95 +74,103 @@ class _NewPasswordSetScreenState extends State<NewPasswordSetScreen> {
               ),
             )
         ),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          alignment: Alignment.center,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 25,
-              ).copyWith(top: 0, bottom: 50),
-              child: Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                  ),
+        body: SizedBox(
+            width: double.infinity,
+            height: double.infinity,
+            child:Stack(
+              children: [
+                Background(),
+                Center(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 25,
+                      ).copyWith(top: 0, bottom: 50),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            alignment: Alignment.center,
+                          ),
 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30,
-                    ),
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          "assets/images/reset_password_icon.png",
-                          width: 110,
-                          height: 110,
-                        )
-                      ],
-                    ),
-                  ),
-                  // Image.asset('assets/images/profile.jpg'),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 30,
+                            ),
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  "assets/images/reset_password_icon.png",
+                                  width: 110,
+                                  height: 110,
+                                )
+                              ],
+                            ),
+                          ),
+                          // Image.asset('assets/images/profile.jpg'),
 
-                  // Image.asset('assets/images/profile.jpg'),
-                  const SizedBox(
-                    height: 50,
-                  ),
+                          // Image.asset('assets/images/profile.jpg'),
+                          const SizedBox(
+                            height: 50,
+                          ),
 
-                  _buildTextFieldNewPassword(
-                    // hintText: 'Password',
-                    obscureText: true,
-                    prefixedIcon: GradientIcon(
-                      Icons.lock,
-                      26,
-                      const LinearGradient(
-                        colors: <Color>[
-                          Colors.awsStartColor,
-                          Colors.awsStartColor,
-                          Colors.awsEndColor,
+                          _buildTextFieldNewPassword(
+                            // hintText: 'Password',
+                            obscureText: true,
+                            prefixedIcon: GradientIcon(
+                              Icons.lock,
+                              26,
+                              const LinearGradient(
+                                colors: <Color>[
+                                  Colors.awsStartColor,
+                                  Colors.awsStartColor,
+                                  Colors.awsEndColor,
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                            ),
+                            labelText: "New Password",
+                          ),
+                          const SizedBox(
+                            height: 22,
+                          ),
+                          //phone number input
+
+                          //password input
+                          _buildTextFieldConfirmPassword(
+                            // hintText: 'Password',
+                            obscureText: true,
+                            prefixedIcon: GradientIcon(
+                              Icons.lock,
+                              26,
+                              const LinearGradient(
+                                colors: <Color>[
+                                  Colors.awsStartColor,
+                                  Colors.awsStartColor,
+                                  Colors.awsEndColor,
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                            ),
+                            labelText: "Confirm Password",
+                          ),
+
+                          const SizedBox(
+                            height: 45,
+                          ),
+                          _buildChangePasswordButton(),
                         ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
                       ),
                     ),
-                    labelText: "New Password",
                   ),
-                  const SizedBox(
-                    height: 22,
-                  ),
-                  //phone number input
-
-                  //password input
-                  _buildTextFieldConfirmPassword(
-                    // hintText: 'Password',
-                    obscureText: true,
-                    prefixedIcon: GradientIcon(
-                      Icons.lock,
-                      26,
-                      const LinearGradient(
-                        colors: <Color>[
-                          Colors.awsStartColor,
-                          Colors.awsStartColor,
-                          Colors.awsEndColor,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    labelText: "Confirm Password",
-                  ),
-
-                  const SizedBox(
-                    height: 45,
-                  ),
-                  _buildChangePasswordButton(),
-                ],
-              ),
-            ),
-          ),
+                )
+              ],
+            )
         ),
+
+
       ),
     );
   }
@@ -175,7 +184,7 @@ class _NewPasswordSetScreenState extends State<NewPasswordSetScreen> {
     return Material(
       color: Colors.transparent,
       child: TextFormField(
-        cursorColor: Colors.appRed,
+        cursorColor: Colors.awsCursorColor,
         cursorWidth: 1.5,
         controller: newPassword,
         keyboardType: TextInputType.visiblePassword,
@@ -253,7 +262,7 @@ class _NewPasswordSetScreenState extends State<NewPasswordSetScreen> {
     return Material(
       color: Colors.transparent,
       child: TextFormField(
-        cursorColor: Colors.appRed,
+        cursorColor: Colors.awsCursorColor,
         cursorWidth: 1.5,
         controller: confirmPassword,
         focusNode: _confirmPasswordFocus,
@@ -313,33 +322,9 @@ class _NewPasswordSetScreenState extends State<NewPasswordSetScreen> {
     );
   }
 
-  Widget _buildChangePasswordButton1() {
-    return SizedBox(
-      height: 50,
-      width: double.infinity,
-      child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
-            Colors.appRed,
-          ),
-          elevation: MaterialStateProperty.all(6),
-          shape: MaterialStateProperty.all(
-            const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(5),
-              ),
-            ),
-          ),
-        ),
-        child: const Text(
-          'SET PASSWORD',
-          style: TextStyle(
-            fontFamily: 'PT-Sans',
-            fontSize: 18,
-            fontWeight: FontWeight.normal,
-            color: Colors.white,
-          ),
-        ),
+
+  Widget _buildChangePasswordButton() {
+    return ElevatedButton(
         onPressed: () {
           String newPasswordTxt, confirmPasswordTxt;
           newPasswordTxt = newPassword!.text;
@@ -347,17 +332,9 @@ class _NewPasswordSetScreenState extends State<NewPasswordSetScreen> {
 
           if (_inputValid(newPasswordTxt, confirmPasswordTxt) == false) {
             // Navigator.push(context,MaterialPageRoute(builder: (context)=>LogInScreen()));
-           // _setResetNewPassword(newPassword: confirmPasswordTxt, userId: userId);
+            //_setResetNewPassword(newPassword: confirmPasswordTxt, userId: userId);
           }
         },
-      ),
-    );
-  }
-  Widget _buildChangePasswordButton() {
-    return ElevatedButton(
-      onPressed: () {
-
-      },
       style: ElevatedButton.styleFrom(
           padding: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
@@ -414,7 +391,7 @@ class _NewPasswordSetScreenState extends State<NewPasswordSetScreen> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.awsMixedColor,
         textColor: Colors.white,
         fontSize: 16.0);
   }
@@ -501,4 +478,5 @@ class _NewPasswordSetScreenState extends State<NewPasswordSetScreen> {
       },
     );
   }
+
 }

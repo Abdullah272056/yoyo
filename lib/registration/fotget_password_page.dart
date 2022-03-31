@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:aws_exam_portal/background/background.dart';
 import 'package:aws_exam_portal/registration/verification_reset_password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,88 +32,101 @@ class _ForgetPasswordState extends State<ForgetPasswordScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.backGroundColor,
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          alignment: Alignment.center,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 30,
-              ).copyWith(
-                top: 10,
-                bottom: 60,
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30,
+        // backgroundColor: Colors.backGroundColor,
+        body: SizedBox(
+            width: double.infinity,
+            height: double.infinity,
+            child:Stack(
+              children: [
+                Background(),
+                Center(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30,
+                      ).copyWith(
+                        top: 10,
+                        bottom: 60,
+                      ),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 30,
+                            ),
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  "assets/images/aws.png",
+                                  width: 180,
+                                  height: 90,
+                                )
+                              ],
+                            ),
+                          ),
+                          // Image.asset('assets/images/profile.jpg'),
+                          const Text(
+                            "",
+                            style: TextStyle(
+                              fontFamily: 'PT-Sans',
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black,
+                            ),
+                          ),
+                          // Image.asset('assets/images/profile.jpg'),
+                          const SizedBox(
+                            height: 60,
+                          ),
+
+                          _buildTextFieldPhone(
+                            // hintText: 'Phone Number',
+                            obscureText: false,
+                            prefixedIcon:  GradientIcon(
+                              Icons.phone,
+                              26,
+                              LinearGradient(
+                                colors: <Color>[
+                                  Colors.awsStartColor,
+                                  Colors.awsStartColor,
+                                  Colors.awsEndColor,
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                            ),
+
+                            labelText: "Phone Number",
+                          ),
+
+                          const SizedBox(
+                            height: 40,
+                          ),
+
+                          _buildNextButton(),
+                          const SizedBox(
+                            height: 20,
+                          ),
+
+                          const SizedBox(
+                            height: 15,
+                          ),
+                        ],
+                      ),
                     ),
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          "assets/images/aws.png",
-                          width: 180,
-                          height: 90,
-                        )
-                      ],
-                    ),
                   ),
-                  // Image.asset('assets/images/profile.jpg'),
-                  const Text(
-                    "",
-                    style: TextStyle(
-                      fontFamily: 'PT-Sans',
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.black,
-                    ),
-                  ),
-                  // Image.asset('assets/images/profile.jpg'),
-                  const SizedBox(
-                    height: 60,
-                  ),
+                )
 
-                _buildTextFieldPhone(
-                  // hintText: 'Phone Number',
-                  obscureText: false,
-                  prefixedIcon:  GradientIcon(
-                    Icons.phone,
-                    26,
-                    LinearGradient(
-                      colors: <Color>[
-                        Colors.awsStartColor,
-                        Colors.awsStartColor,
-                        Colors.awsEndColor,
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
+              ],
+            )
 
-                  labelText: "Phone Number",
-                ),
 
-                  const SizedBox(
-                    height: 40,
-                  ),
 
-                  _buildNextButton(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-
-                  const SizedBox(
-                    height: 15,
-                  ),
-                ],
-              ),
-            ),
-          ),
         ),
       ),
     );
+
+
   }
 
 
@@ -127,7 +141,7 @@ class _ForgetPasswordState extends State<ForgetPasswordScreen> {
     return Container(
       color: Colors.transparent,
       child: TextField(
-        cursorColor: Colors.appRed,
+        cursorColor: Colors.awsCursorColor,
         cursorWidth: 1.5,
         controller: phoneNumber,
         textInputAction: TextInputAction.next,
@@ -171,11 +185,17 @@ class _ForgetPasswordState extends State<ForgetPasswordScreen> {
   Widget _buildNextButton() {
     return ElevatedButton(
       onPressed: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    VerificationResetPasswordScreen("12")));
+        String phoneTxt = phoneNumber!.text;
+        if (_inputValid(phoneTxt) == false) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      const VerificationResetPasswordScreen("12")));
+          //_sendMobileNumber(phoneTxt);
+        } else {}
+
+
       },
       style: ElevatedButton.styleFrom(
           padding: EdgeInsets.zero,
@@ -211,16 +231,16 @@ class _ForgetPasswordState extends State<ForgetPasswordScreen> {
 
   _inputValid(String phone) {
     if (phone.isEmpty) {
-      _showToast("phone can't empty");
+      _showToast("Phone can't empty");
       return;
     }
 
     if (phone.length < 8) {
-      _showToast("phone can't smaller than 8 digit");
+      _showToast("Phone can't smaller than 8 digit");
       return;
     }
     if (phone.length > 13) {
-      _showToast("phone can't bigger than 13 digit");
+      _showToast("Phone can't bigger than 13 digit");
       return;
     }
     return false;
@@ -232,7 +252,7 @@ class _ForgetPasswordState extends State<ForgetPasswordScreen> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.awsMixedColor,
         textColor: Colors.white,
         fontSize: 16.0);
   }

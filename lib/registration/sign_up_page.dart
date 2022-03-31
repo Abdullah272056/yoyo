@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:aws_exam_portal/background/background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -35,182 +36,194 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: Scaffold(
         backgroundColor: Colors.backGroundColor,
         // backgroundColor: Colors.backGroundColor,
-        body: SizedBox(
+        body:
+
+        SizedBox(
           width: double.infinity,
           height: double.infinity,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 30,
-              ).copyWith(top: 60),
-              child: Column(
-                children: [
-                  Padding(
+          child:Stack(
+            children: [
+              Background(),
+              Center(
+                child: SingleChildScrollView(
+                  child: Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 30,
-                    ),
+                    ).copyWith(top: 30),
                     child: Column(
                       children: [
-                        Image.asset(
-                          "assets/images/aws.png",
-                          width: 180,
-                          height: 90,
-                        )
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                          ),
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                "assets/images/aws.png",
+                                width: 160,
+                                height: 80,
+                              )
+                            ],
+                          ),
+                        ),
+
+
+                        const SizedBox(
+                          height: 10,
+                        ),
+
+                        const Text(
+                          'Create New Account',
+                          style: TextStyle(
+                            fontFamily: 'PT-Sans',
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.awsMixedColor,
+                          ),
+                        ),
+
+                        const SizedBox(
+                          height: 20,
+                        ),
+
+                        //full name input
+                        _buildTextField(
+                          // hintText: 'Full Name',
+                            obscureText: false,
+                            prefixedIcon: GradientIcon(
+                              Icons.person,
+                              24,
+                              LinearGradient(
+                                colors: <Color>[
+                                  Colors.awsStartColor,
+                                  Colors.awsStartColor,
+                                  Colors.awsEndColor,
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                            ),
+                            labelText: "Full Name"),
+
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        //email input
+                        _buildTextFieldEmail(
+                          // hintText: 'Email',
+                            obscureText: false,
+                            prefixedIcon: GradientIcon(
+                              Icons.email,
+                              24,
+                              LinearGradient(
+                                colors: <Color>[
+                                  Colors.awsStartColor,
+                                  Colors.awsStartColor,
+                                  Colors.awsEndColor,
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                            ),
+
+                            labelText: "Email"),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        //phone number input
+                        _buildTextFieldPhone(
+                          // hintText: 'Phone Number',
+                            obscureText: false,
+                            prefixedIcon:GradientIcon(
+                              Icons.phone,
+                              24,
+                              LinearGradient(
+                                colors: <Color>[
+                                  Colors.awsStartColor,
+                                  Colors.awsStartColor,
+                                  Colors.awsEndColor,
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                            ),
+
+                            labelText: "Phone Number"),
+
+                        const SizedBox(
+                          height: 15,
+                        ),
+
+                        //password input
+                        _buildTextFieldNewPassword(
+                          // hintText: 'Password',
+                          obscureText: true,
+                          prefixedIcon:GradientIcon(
+                            Icons.lock,
+                            24,
+                            LinearGradient(
+                              colors: <Color>[
+                                Colors.awsStartColor,
+                                Colors.awsStartColor,
+                                Colors.awsEndColor,
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                          ),
+                          labelText: "Password",
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+
+                        //confirm password input
+                        _buildTextFieldConfirmPassword(
+                          // hintText: 'Confirm Password',
+                          obscureText: true,
+                          prefixedIcon: GradientIcon(
+                            Icons.lock,
+                            24,
+                            LinearGradient(
+                              colors: <Color>[
+                                Colors.awsStartColor,
+                                Colors.awsStartColor,
+                                Colors.awsEndColor,
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                          ),
+                          labelText: "Confirm Password",
+                        ),
+
+                        const SizedBox(
+                          height: 25,
+                        ),
+
+                        _buildTermsAndConditionQuestion(),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        _buildSignUpButton(),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        _buildSignUpQuestion(),
+                        const SizedBox(
+                          height: 15,
+                        ),
                       ],
                     ),
                   ),
+                ),
+              )
+
+            ],
+          )
 
 
-                  const SizedBox(
-                    height: 30,
-                  ),
 
-                  const Text(
-                    'Create New Account',
-                    style: TextStyle(
-                      fontFamily: 'PT-Sans',
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
-                  ),
-
-                  const SizedBox(
-                    height: 30,
-                  ),
-
-                  //full name input
-                  _buildTextField(
-                      // hintText: 'Full Name',
-                      obscureText: false,
-                      prefixedIcon: GradientIcon(
-                        Icons.person,
-                        26,
-                        LinearGradient(
-                          colors: <Color>[
-                            Colors.awsStartColor,
-                            Colors.awsStartColor,
-                            Colors.awsEndColor,
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                      ),
-                      labelText: "Full Name"),
-
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  //email input
-                  _buildTextFieldEmail(
-                      // hintText: 'Email',
-                      obscureText: false,
-                      prefixedIcon: GradientIcon(
-                        Icons.email,
-                        26,
-                        LinearGradient(
-                          colors: <Color>[
-                            Colors.awsStartColor,
-                            Colors.awsStartColor,
-                            Colors.awsEndColor,
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                      ),
-
-                      labelText: "Email"),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  //phone number input
-                  _buildTextFieldPhone(
-                      // hintText: 'Phone Number',
-                      obscureText: false,
-                      prefixedIcon:GradientIcon(
-                        Icons.phone,
-                        26,
-                        LinearGradient(
-                          colors: <Color>[
-                            Colors.awsStartColor,
-                            Colors.awsStartColor,
-                            Colors.awsEndColor,
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                      ),
-
-                      labelText: "Phone Number"),
-
-                  const SizedBox(
-                    height: 15,
-                  ),
-
-                  //password input
-                  _buildTextFieldNewPassword(
-                    // hintText: 'Password',
-                    obscureText: true,
-                    prefixedIcon:GradientIcon(
-                      Icons.lock,
-                      26,
-                      LinearGradient(
-                        colors: <Color>[
-                          Colors.awsStartColor,
-                          Colors.awsStartColor,
-                          Colors.awsEndColor,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    labelText: "Password",
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-
-                  //confirm password input
-                  _buildTextFieldConfirmPassword(
-                    // hintText: 'Confirm Password',
-                    obscureText: true,
-                    prefixedIcon: GradientIcon(
-                      Icons.lock,
-                      26,
-                      LinearGradient(
-                        colors: <Color>[
-                          Colors.awsStartColor,
-                          Colors.awsStartColor,
-                          Colors.awsEndColor,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    labelText: "Confirm Password",
-                  ),
-
-
-                  const SizedBox(
-                    height: 35,
-                  ),
-
-                  _buildTermsAndConditionQuestion(),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  _buildSignUpButton(),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  _buildSignUpQuestion(),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                ],
-              ),
-            ),
-          ),
         ),
       ),
     );
@@ -235,7 +248,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: TextField(
         controller: _nameController,
         textInputAction: TextInputAction.next,
-        cursorColor: Colors.appRed,
+        cursorColor: Colors.awsCursorColor,
         cursorWidth: 1.5,
         style: const TextStyle(
           color: Colors.black,
@@ -280,7 +293,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       color: Colors.transparent,
       child: TextField(
         controller: _phoneNumberController,
-        cursorColor: Colors.appRed,
+        cursorColor: Colors.awsCursorColor,
         cursorWidth: 1.5,
         textInputAction: TextInputAction.next,
         style: const TextStyle(color: Colors.black, fontSize: 18),
@@ -328,7 +341,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       color: Colors.transparent,
       child: TextField(
         controller: _emailController,
-        cursorColor: Colors.appRed,
+        cursorColor: Colors.awsCursorColor,
         cursorWidth: 1.5,
         textInputAction: TextInputAction.next,
         style: const TextStyle(color: Colors.black, fontSize: 18),
@@ -369,7 +382,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Material(
       color: Colors.transparent,
       child: TextFormField(
-        cursorColor: Colors.appRed,
+        cursorColor: Colors.awsCursorColor,
         cursorWidth: 1.5,
         controller: _newPasswordController,
         keyboardType: TextInputType.visiblePassword,
@@ -389,7 +402,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           suffixIcon: IconButton(
               color: Colors.white,
               icon: GradientIcon(
-                _isObscure3 ? Icons.visibility_off : Icons.visibility,
+                _isObscure2 ? Icons.visibility_off : Icons.visibility,
                 26,
                 LinearGradient(
                   colors: <Color>[
@@ -445,7 +458,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Material(
       color: Colors.transparent,
       child: TextFormField(
-        cursorColor: Colors.appRed,
+        cursorColor: Colors.awsCursorColor,
         cursorWidth: 1.5,
         controller: _confirmPasswordController,
         focusNode: _confirmPasswordFocus,
@@ -507,7 +520,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _buildSignUpButton() {
     return ElevatedButton(
       onPressed: () {
-        print('Hi there');
+
       },
       style: ElevatedButton.styleFrom(
           padding: EdgeInsets.zero,

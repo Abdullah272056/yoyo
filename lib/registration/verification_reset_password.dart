@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:aws_exam_portal/background/background.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:otp_text_field/otp_field.dart';
@@ -64,71 +65,78 @@ class _VerificationResetPasswordState
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.backGroundColor,
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          alignment: Alignment.center,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 30,
-              ).copyWith(
-                top: 10,
-                bottom: 10,
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30,
+        body:
+        SizedBox(
+            width: double.infinity,
+            height: double.infinity,
+            child:Stack(
+              children: [
+                Background(),
+                Center(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30,
+                      ).copyWith(
+                        top: 10,
+                        bottom: 10,
+                      ),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 30,
+                            ),
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  "assets/images/aws.png",
+                                  width: 180,
+                                  height: 90,
+                                )
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          const Text(
+                            "Verification code has been send to your mobile",
+                            style: TextStyle(
+                              fontFamily: 'PT-Sans',
+                              fontSize: 12,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.awsColor,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+
+                          //phone number input
+                          _buildTextFieldOTPView(
+                            hintText: 'Enter 6 digit Number',
+                            obscureText: false,
+                            prefixedIcon: const Icon(Icons.phone, color: Colors.appRed),
+                          ),
+                          const SizedBox(
+                            height: 50,
+                          ),
+
+                          _buildNextButton(),
+
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          _buildVerifyQuestion(),
+                        ],
+                      ),
                     ),
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          "assets/images/aws.png",
-                          width: 180,
-                          height: 90,
-                        )
-                      ],
-                    ),
                   ),
-
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  const Text(
-                    "Verification code has been send to your mobile",
-                    style: TextStyle(
-                      fontFamily: 'PT-Sans',
-                      fontSize: 12,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.awsColor,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-
-                  //phone number input
-                  _buildTextFieldOTPView(
-                    hintText: 'Enter 6 digit Number',
-                    obscureText: false,
-                    prefixedIcon: const Icon(Icons.phone, color: Colors.appRed),
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-
-                  _buildNextButton(),
-
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  _buildVerifyQuestion(),
-                ],
-              ),
-            ),
-          ),
+                )
+              ],
+            )
         ),
       ),
     );
