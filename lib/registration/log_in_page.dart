@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:aws_exam_portal/background/background.dart';
+import 'package:aws_exam_portal/home_page/home_page.dart';
 import 'package:aws_exam_portal/registration/sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../gradiant_icon.dart';
+import 'choose_role.dart';
 import 'fotget_password_page.dart';
 
 
@@ -303,10 +305,10 @@ class _LogInScreenState extends State<LogInScreen> {
           String phoneTxt = phoneNumberController!.text;
           String passwordTxt = passwordController!.text;
           if (_inputValid(phoneTxt, passwordTxt) == false) {
-            _showToast("call login user");
+            //_showToast("call login user");
            // _logInUser(phoneTxt, passwordTxt);
 
-            // Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const NavigationBarScreen()));
+            Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const HomeScreen()));
           } else {}
           //Navigator.push(context,MaterialPageRoute(builder: (context)=>SignUpScreen()));
         },
@@ -365,7 +367,7 @@ class _LogInScreenState extends State<LogInScreen> {
           ),
           onTap: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SignUpScreen()));
+                MaterialPageRoute(builder: (context) => ChooseRoleScreen()));
           },
         ),
       ],
