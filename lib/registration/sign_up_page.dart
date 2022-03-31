@@ -504,86 +504,43 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Widget _buildSignUpButton1() {
-    return SizedBox(
-      height: 50,
-      width: double.infinity,
-      child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
-            Colors.appRed,
-          ),
-          elevation: MaterialStateProperty.all(6),
-          shape: MaterialStateProperty.all(
-            const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(5),
-              ),
-            ),
-          ),
-        ),
-        child: const Text(
-          'SIGN UP',
-          style: TextStyle(
-            fontFamily: 'PT-Sans',
-            fontSize: 18,
-            fontWeight: FontWeight.normal,
-            color: Colors.white,
-          ),
-        ),
-        onPressed: () {
-          String nameTxt, emailTxt, phoneTxt, passwordTxt, confirmPasswordTxt,referCodeTxt="";
-          nameTxt = _nameController!.text;
-          emailTxt = _emailController!.text;
-          phoneTxt = _phoneNumberController!.text;
-          passwordTxt = _newPasswordController!.text;
-          confirmPasswordTxt = _confirmPasswordController!.text;
-          if(_refCodeController!.text.isNotEmpty){
-            referCodeTxt = _refCodeController!.text;
-          }
-
-          if (_inputValid(nameTxt, emailTxt, phoneTxt, passwordTxt,
-                  confirmPasswordTxt) ==
-              false) {
-
-          } else {}
-        },
-      ),
-    );
-  }
   Widget _buildSignUpButton() {
-    return SizedBox(
-      height: 50.0,
-      child: RaisedButton(
-        onPressed: () {},
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
-        padding: EdgeInsets.all(0.0),
-        child: Ink(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [Colors.awsStartColor, Colors.awsEndColor],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              ),
-              borderRadius: BorderRadius.circular(10.0)
-          ),
-          child: Container(
-            constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
-            alignment: Alignment.center,
-            child: Text(
-              'SIGN UP',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'PT-Sans',
-                fontSize: 18,
-                fontWeight: FontWeight.normal,
-                color: Colors.white,
-              ),
+    return ElevatedButton(
+      onPressed: () {
+        print('Hi there');
+      },
+      style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(7))),
+      child: Ink(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [Colors.awsStartColor, Colors.awsEndColor],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+            borderRadius: BorderRadius.circular(7.0)
+        ),
+        child: Container(
+
+          height: 50,
+          alignment: Alignment.center,
+          child: Text(
+            'SIGN UP',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'PT-Sans',
+              fontSize: 18,
+              fontWeight: FontWeight.normal,
+              color: Colors.white,
             ),
           ),
         ),
       ),
     );
   }
+
+
 
   Widget _buildTermsAndConditionQuestion() {
     return Row(

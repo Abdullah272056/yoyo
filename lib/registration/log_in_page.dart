@@ -293,74 +293,36 @@ class _LogInScreenState extends State<LogInScreen> {
     );
   }
 
-  Widget _buildLoginButton1() {
-    return SizedBox(
-      height: 50,
-      width: double.infinity,
-      child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
-            Colors.appRed,
-          ),
-          elevation: MaterialStateProperty.all(6),
-          shape: MaterialStateProperty.all(
-            const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(5),
-              ),
-            ),
-          ),
-        ),
-        child: const Text(
-          'LOG IN',
-          style: TextStyle(
-            fontFamily: 'PT-Sans',
-            fontSize: 18,
-            fontWeight: FontWeight.normal,
-            color: Colors.white,
-          ),
-        ),
-        onPressed: () {
-          String phoneTxt = phoneNumberController!.text;
-          String passwordTxt = passwordController!.text;
-          if (_inputValid(phoneTxt, passwordTxt) == false) {
-           // _logInUser(phoneTxt, passwordTxt);
-
-            // Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const NavigationBarScreen()));
-          } else {}
-          //Navigator.push(context,MaterialPageRoute(builder: (context)=>SignUpScreen()));
-        },
-      ),
-    );
-  }
 
   Widget _buildLoginButton() {
-    return SizedBox(
-      height: 50.0,
-      child: RaisedButton(
-        onPressed: () {},
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
-        padding: EdgeInsets.all(0.0),
-        child: Ink(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [Colors.awsStartColor, Colors.awsEndColor],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              ),
-              borderRadius: BorderRadius.circular(10.0)
-          ),
-          child: Container(
-            constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
-            alignment: Alignment.center,
-            child: Text(
-              "Login",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'PT-Sans',
-                fontSize: 18,
-                fontWeight: FontWeight.normal,
-                color: Colors.white,
-              ),
+    return ElevatedButton(
+      onPressed: () {
+        print('Hi there');
+      },
+      style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(7))),
+      child: Ink(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [Colors.awsStartColor, Colors.awsEndColor],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+            borderRadius: BorderRadius.circular(7.0)
+        ),
+        child: Container(
+
+          height: 50,
+          alignment: Alignment.center,
+          child:  Text(
+            "Login",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'PT-Sans',
+              fontSize: 18,
+              fontWeight: FontWeight.normal,
+              color: Colors.white,
             ),
           ),
         ),

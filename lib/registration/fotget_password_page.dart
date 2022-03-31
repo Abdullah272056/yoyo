@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:aws_exam_portal/registration/verification_reset_password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -89,10 +90,10 @@ class _ForgetPasswordState extends State<ForgetPasswordScreen> {
                       end: Alignment.bottomRight,
                     ),
                   ),
-                  // prefixedIcon: const Icon(Icons.phone, color: Colors.appRed),
+
                   labelText: "Phone Number",
                 ),
-                  
+
                   const SizedBox(
                     height: 40,
                   ),
@@ -166,39 +167,47 @@ class _ForgetPasswordState extends State<ForgetPasswordScreen> {
   }
 
 
+
   Widget _buildNextButton() {
-    return SizedBox(
-      height: 50.0,
-      child: RaisedButton(
-        onPressed: () {},
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
-        padding: EdgeInsets.all(0.0),
-        child: Ink(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [Colors.awsStartColor, Colors.awsEndColor],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              ),
-              borderRadius: BorderRadius.circular(7.0)
-          ),
-          child: Container(
-            constraints: BoxConstraints( minHeight: 50.0),
-            alignment: Alignment.center,
-            child: Text(
-              "Next",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'PT-Sans',
-                fontSize: 18,
-                fontWeight: FontWeight.normal,
-                color: Colors.white,
-              ),
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    VerificationResetPasswordScreen("12")));
+      },
+      style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(7))),
+      child: Ink(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [Colors.awsStartColor, Colors.awsEndColor],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+            borderRadius: BorderRadius.circular(7.0)
+        ),
+        child: Container(
+
+          height: 50,
+          alignment: Alignment.center,
+          child: Text(
+            "Next",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'PT-Sans',
+              fontSize: 18,
+              fontWeight: FontWeight.normal,
+              color: Colors.white,
             ),
           ),
         ),
       ),
     );
   }
+
 
   _inputValid(String phone) {
     if (phone.isEmpty) {
