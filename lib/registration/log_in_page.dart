@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../gradiant_icon.dart';
+import 'fotget_password_page.dart';
 
 
 
@@ -143,10 +144,10 @@ class _LogInScreenState extends State<LogInScreen> {
                       ),
                     ),
                     onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => ForgetPasswordScreen()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ForgetPasswordScreen()));
                     },
                   ),
 
@@ -197,10 +198,10 @@ class _LogInScreenState extends State<LogInScreen> {
           contentPadding: const EdgeInsets.all(15),
           prefixIcon: prefixedIcon,
           focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.appRed, width: 1),
+            borderSide: BorderSide(color: Colors.awsEndColor, width: 1),
           ),
           enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.appRed, width: .1),
+            borderSide: BorderSide(color: Colors.awsStartColor, width: .2),
           ),
           labelStyle: const TextStyle(
             color: Colors.hint_color,
@@ -246,7 +247,21 @@ class _LogInScreenState extends State<LogInScreen> {
           contentPadding: const EdgeInsets.all(15),
           suffixIcon: IconButton(
               color: Colors.appRed,
-              icon: Icon(_isObscure ? Icons.visibility_off : Icons.visibility),
+              icon: GradientIcon(
+                _isObscure ? Icons.visibility_off : Icons.visibility,
+                26,
+                LinearGradient(
+                  colors: <Color>[
+                    Colors.awsStartColor,
+                    Colors.awsStartColor,
+                    Colors.awsEndColor,
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+
+             // Icon(_isObscure ? Icons.visibility_off : Icons.visibility),
               onPressed: () {
                 setState(() {
                   _isObscure = !_isObscure;
@@ -264,10 +279,10 @@ class _LogInScreenState extends State<LogInScreen> {
           ),
 
           focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.appRed, width: 1),
+            borderSide: BorderSide(color: Colors.awsEndColor, width: 1),
           ),
           enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.appRed, width: .1),
+            borderSide: BorderSide(color: Colors.awsStartColor, width: .2),
           ),
           labelText: labelText,
           labelStyle: const TextStyle(
@@ -372,7 +387,7 @@ class _LogInScreenState extends State<LogInScreen> {
               fontFamily: 'PT-Sans',
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.appRed,
+              color: Colors.awsColor,
             ),
           ),
           onTap: () {

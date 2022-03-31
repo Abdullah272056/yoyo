@@ -252,10 +252,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           contentPadding: const EdgeInsets.all(15),
           prefixIcon: prefixedIcon,
           focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.appRed, width: 1),
+            borderSide: BorderSide(color: Colors.awsEndColor, width: 1),
           ),
           enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.appRed, width: .1),
+            borderSide: BorderSide(color: Colors.awsStartColor, width: .2),
           ),
           hintText: hintText,
           hintStyle: const TextStyle(
@@ -292,10 +292,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           contentPadding: const EdgeInsets.all(15),
           prefixIcon: prefixedIcon,
           focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.appRed, width: 1),
+            borderSide: BorderSide(color: Colors.awsEndColor, width: 1),
           ),
           enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.appRed, width: .1),
+            borderSide: BorderSide(color: Colors.awsStartColor, width: .2),
           ),
           labelStyle: const TextStyle(
             color: Colors.hint_color,
@@ -339,10 +339,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           contentPadding: const EdgeInsets.all(15),
           prefixIcon: prefixedIcon,
           focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.appRed, width: 1),
+            borderSide: BorderSide(color: Colors.awsEndColor, width: 1),
           ),
           enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.appRed, width: .1),
+            borderSide: BorderSide(color: Colors.awsStartColor, width: .2),
           ),
           labelText: labelText,
           labelStyle: const TextStyle(
@@ -416,10 +416,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
             fontFamily: 'PTSans',
           ),
           focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.appRed, width: 1),
+            borderSide: BorderSide(color: Colors.awsEndColor, width: 1),
           ),
           enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.appRed, width: .1),
+            borderSide: BorderSide(color: Colors.awsStartColor, width: .2),
           ),
           labelText: labelText,
           labelStyle: const TextStyle(
@@ -490,10 +490,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
             fontFamily: 'PTSans',
           ),
           focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.appRed, width: 1),
+            borderSide: BorderSide(color: Colors.awsEndColor, width: 1),
           ),
           enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.appRed, width: .1),
+            borderSide: BorderSide(color: Colors.awsStartColor, width: .2),
           ),
           labelText: labelText,
           labelStyle: const TextStyle(
@@ -632,7 +632,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               fontFamily: 'PT-Sans',
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.appRed,
+              color: Colors.awsColor,
             ),
           ),
           onTap: () {
