@@ -47,8 +47,7 @@ class _VerificationAfterSignUpScreenState
   bool _isCountingStatus=false;
   String _time="4:00";
   late Timer _timer;
-  int _start = 4 * 5;
-  //int _start = 4 * 60;
+  int _start = 4 * 60;
 
 
   @override
@@ -327,7 +326,7 @@ class _VerificationAfterSignUpScreenState
           ),
           Text(
             _time,
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'PT-Sans',
               fontSize: 18,
               color: Colors.black,
@@ -393,9 +392,12 @@ class _VerificationAfterSignUpScreenState
         print('connected');
         _showLoadingDialog(context,"Verifying...");
         try {
-          Response response = await get(
-            Uri.parse(
-                '$BASE_URL_API$SUB_URL_API_VERIFICATION_AFTER_REGISTRATION?user_id=$userId&code=$otp_code'),
+          Response response = await post(
+            Uri.parse('$BASE_URL_API$SUB_URL_API_VERIFICATION_AFTER_REGISTRATION'),
+              body: {
+                'user_id': user_id,
+                'code': otp_code,
+              }
           );
           Navigator.of(context).pop();
           if (response.statusCode == 200) {

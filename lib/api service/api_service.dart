@@ -8,11 +8,12 @@ String SUB_URL_API_SIGN_UP_AS_STUDENT = "student-registration/";
 String SUB_URL_API_SIGN_UP_AS_TEACHER = "teacher-registration/";
 String SUB_URL_API_FORGRT_PASSWORD = "send-email-otp-for-forget-password/";
 String SUB_URL_API_RESEND_CODE = "otp-resend/";
+String SUB_URL_API_VERIFICATION_AFTER_REGISTRATION = "email-verify/";
 
 String SUB_URL_API = "v1/otp/";
 String SUB_URL_API_LOG_IN = "v1/user-login/";
 String SUB_URL_API_RESEND_OTP = "v1/otp-resend/";
-String SUB_URL_API_VERIFICATION_AFTER_REGISTRATION = "v1/otp/";
+
 
 String SUB_URL_API_RESET_CONFIRM_PASSWORD = "v1/reset-confirm-password/";
 

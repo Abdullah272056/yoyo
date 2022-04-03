@@ -253,7 +253,8 @@ class _SignUpScreenAsTeacherScreenState extends State<SignUpAsTeacherScreen> {
         _showLoadingDialog(context,"Creating...");
         try {
           Response response =
-          await post(Uri.parse('$BASE_URL_API$SUB_URL_API_SIGN_UP_AS_TEACHER'), body: {
+          await post(Uri.parse('$BASE_URL_API$SUB_URL_API_SIGN_UP_AS_TEACHER'),
+              body: {
             'username': name,
             'email': email,
             'phone_number': mobile,
