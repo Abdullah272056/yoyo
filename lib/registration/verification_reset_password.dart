@@ -41,7 +41,9 @@ class _VerificationResetPasswordState
   void initState() {
     super.initState();
     //countDown();
+    _showToast("Check your email!");
     startTimer();
+
     // passwordController=TextEditingController(text:SharedPref().readUserId());
   }
 
@@ -103,7 +105,7 @@ class _VerificationResetPasswordState
                             height: 30,
                           ),
                           const Text(
-                            "Verification code has been send to your mobile",
+                            "Verification code has been send to your email",
                             style: TextStyle(
                               fontFamily: 'PT-Sans',
                               fontSize: 12,

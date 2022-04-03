@@ -184,11 +184,7 @@ class _ForgetPasswordState extends State<ForgetPasswordScreen> {
       onPressed: () {
         String emailTxt = _emailController!.text;
         if (_inputValid(emailTxt) == false) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      const VerificationResetPasswordScreen("12")));
+
           _sendEmailForOtp(emailTxt);
         } else {}
 
@@ -238,7 +234,7 @@ class _ForgetPasswordState extends State<ForgetPasswordScreen> {
           Navigator.of(context).pop();
           if (response.statusCode == 200) {
             setState(() {
-              _showToast("success");
+             // _showToast("success");
               var data = jsonDecode(response.body.toString());
               userId = data['data']["user_id"].toString();
               Navigator.push(
@@ -314,8 +310,8 @@ class _ForgetPasswordState extends State<ForgetPasswordScreen> {
                           width: 10,
                         ),
                         CircularProgressIndicator(
-                          backgroundColor: Colors.appRed,
-                          color: Colors.black,
+                          backgroundColor: Colors.awsEndColor,
+                          color: Colors.awsStartColor,
                           strokeWidth: 5,
                         ),
                         SizedBox(
@@ -323,7 +319,7 @@ class _ForgetPasswordState extends State<ForgetPasswordScreen> {
                         ),
                         Text(
                           "Checking...",
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(fontSize: 20,color: Colors.awsMixedColor),
                         )
                       ],
                     ),

@@ -202,35 +202,7 @@ class _VerificationAfterSignUpScreenState
     );
   }
 
-  Widget _buildTextFieldOTPView1({
-    required bool obscureText,
-    Widget? prefixedIcon,
-    String? hintText,
-    String? labelText,
-  }) {
-    return Container(
-      color: Colors.transparent,
-      child: OTPTextField(
-        length: 6,
-        width: MediaQuery.of(context).size.width,
-        textFieldAlignment: MainAxisAlignment.spaceAround,
-        fieldStyle: FieldStyle.underline,
-        style: TextStyle(
-          fontSize: 18,
-          color: Colors.green,
-        ),
-        keyboardType: TextInputType.number,
-        onCompleted: (pin) {
-          _otpTxt = pin;
-        },
-        onChanged: (value) {
-          if (value.length < 6) {
-            _otpTxt = "";
-          }
-        },
-      ),
-    );
-  }
+
 
   Widget _buildTextFieldOTPView({
     required bool obscureText,
@@ -430,18 +402,18 @@ class _VerificationAfterSignUpScreenState
       SharedPreferences sharedPreferences =
       await SharedPreferences.getInstance();
 
-      sharedPreferences.setString(pref_user_token, userInfo['access_token'].toString());
-      sharedPreferences.setString(pref_user_refresh_token, userInfo['refresh_token'].toString());
-      sharedPreferences.setBool(pref_login_status, true);
-      sharedPreferences.setString(pref_user_Id, userInfo['data']["user_id"].toString());
-      sharedPreferences.setString(pref_user_email, userInfo['data']["user_email"].toString());
+      // sharedPreferences.setString(pref_user_token, userInfo['access_token'].toString());
+      // sharedPreferences.setString(pref_user_refresh_token, userInfo['refresh_token'].toString());
+      // sharedPreferences.setBool(pref_login_status, true);
+      sharedPreferences.setString(pref_user_Id, userInfo['data']["id"].toString());
+      sharedPreferences.setString(pref_user_email, userInfo['data']["email"].toString());
       sharedPreferences.setString(pref_user_gender, userInfo['data']["gender"].toString());
-      sharedPreferences.setString(pref_user_dob, userInfo['data']["date_of_birth"].toString());
+     // sharedPreferences.setString(pref_user_dob, userInfo['data']["date_of_birth"].toString());
       sharedPreferences.setString(pref_user_short_address,userInfo['data']["user_short_address"].toString());
-      sharedPreferences.setString(pref_user_image, userInfo['data']["user_image"].toString());
-      sharedPreferences.setString(pref_user_name, userInfo['data']["user_name"].toString());
-      sharedPreferences.setString(pref_user_number, userInfo['data']["user_phone"].toString());
-      sharedPreferences.setString(pref_user_city_id, userInfo['data']["city_id"].toString());
+     // sharedPreferences.setString(pref_user_image, userInfo['data']["user_image"].toString());
+      sharedPreferences.setString(pref_user_name, userInfo['data']["username"].toString());
+      sharedPreferences.setString(pref_user_number, userInfo['data']["phone_number"].toString());
+      //sharedPreferences.setString(pref_user_city_id, userInfo['data']["city_id"].toString());
     } catch (e) {
       //code
     }
