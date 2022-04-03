@@ -36,7 +36,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   fluttertoast: ^8.0.8
   otp_text_field: ^1.1.1
-
+  # api
+  http: ^0.13.0
 
 dev_dependencies:
   flutter_test:

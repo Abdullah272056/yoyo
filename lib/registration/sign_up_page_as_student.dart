@@ -1,30 +1,32 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:aws_exam_portal/api%20service/api_service.dart';
 import 'package:aws_exam_portal/background/background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart';
 
 import '../gradiant_icon.dart';
 import 'log_in_page.dart';
 
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({
+class SignUpScreenAsStudent extends StatefulWidget {
+  const SignUpScreenAsStudent({
     Key? key,
   }) : super(key: key);
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<SignUpScreenAsStudent> createState() => _SignUpScreenAsStudentState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenAsStudentState extends State<SignUpScreenAsStudent> {
   TextEditingController? _nameController = TextEditingController();
   TextEditingController? _emailController = TextEditingController();
   TextEditingController? _phoneNumberController = TextEditingController();
   TextEditingController? _newPasswordController = TextEditingController();
   TextEditingController? _confirmPasswordController = TextEditingController();
-  TextEditingController? _refCodeController = TextEditingController();
+
   final FocusNode _newPasswordFocus = FocusNode();
   final FocusNode _confirmPasswordFocus = FocusNode();
   bool _isObscure2 = true;
@@ -59,7 +61,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: Column(
                             children: [
                               Image.asset(
-                                "assets/images/aws.png",
+                                "assets/images/teacher.png",
                                 width: 160,
                                 height: 80,
                               )
@@ -67,13 +69,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
 
-
                         const SizedBox(
                           height: 10,
                         ),
 
                         const Text(
-                          'Create New Account',
+                          'Create New Account'
+                              '\nAs Student',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: 'PT-Sans',
                             fontSize: 22,
@@ -234,6 +237,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void initState() {
     super.initState();
 
+  }
+
+
+  _signUp(
+      {required String name,
+        required String email,
+        required String mobile,
+        required String password,
+      }) async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        _showLoadingDialog(context);
+        try {
+          Response response =
+          await post(Uri.parse('$BASE_URL_API$SUB_URL_API_SIGN_UP_AS_STUDENT'), body: {
+            'username': name,
+            'email': email,
+            'phone_number': mobile,
+            'password': password,
+          });
+          Navigator.of(context).pop();
+          if (response.statusCode == 200) {
+            _showToast("success");
+            var data = jsonDecode(response.body.toString());
+
+          } else if (response.statusCode == 302) {
+            var data = jsonDecode(response.body.toString());
+            _showToast(data['message']);
+          } else {
+            var data = jsonDecode(response.body.toString());
+            _showToast(data['message']);
+          }
+        } catch (e) {
+          Navigator.of(context).pop();
+          print(e.toString());
+        }
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.cancel();
+      _showToast("No Internet Connection!");
+    }
   }
 
 
@@ -520,7 +565,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _buildSignUpButton() {
     return ElevatedButton(
       onPressed: () {
+        String nameTxt, emailTxt, phoneTxt, passwordTxt, confirmPasswordTxt;
+        nameTxt = _nameController!.text;
+        emailTxt = _emailController!.text;
+        phoneTxt = _phoneNumberController!.text;
+        passwordTxt = _newPasswordController!.text;
+        confirmPasswordTxt = _confirmPasswordController!.text;
 
+        if (_inputValid(nameTxt, emailTxt, phoneTxt, passwordTxt,confirmPasswordTxt) ==
+            false) {
+          _signUp(
+            name: nameTxt,
+            email: emailTxt,
+            mobile: phoneTxt,
+            password: passwordTxt,
+          );
+        } else {}
       },
       style: ElevatedButton.styleFrom(
           padding: EdgeInsets.zero,
@@ -552,8 +612,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
-
-
 
   Widget _buildTermsAndConditionQuestion() {
     return Row(
@@ -626,7 +684,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return;
     }
     if (!RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(email)) {
       _showToast("Enter valid email");
       return;
@@ -644,8 +702,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return;
     }
 
+
     if (password.isEmpty) {
       _showToast("password can't empty");
+      return;
+    }
+    if (password.length < 8) {
+      _showToast("password can't smaller than 8 digit");
       return;
     }
     if (confirmPassword.isEmpty) {
@@ -666,13 +729,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.awsMixedColor,
         textColor: Colors.white,
         fontSize: 16.0);
   }
-
-
-
 
   void _showLoadingDialog(BuildContext context) {
     showDialog(

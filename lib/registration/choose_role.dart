@@ -3,7 +3,8 @@ import 'dart:io';
 
 import 'package:aws_exam_portal/background/background.dart';
 import 'package:aws_exam_portal/home_page/home_page.dart';
-import 'package:aws_exam_portal/registration/sign_up_page.dart';
+import 'package:aws_exam_portal/registration/sign_up_page_as_student.dart';
+import 'package:aws_exam_portal/registration/sign_up_page_as_teacher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -104,7 +105,17 @@ class _ChooseRoleScreenState extends State<ChooseRoleScreen> {
                       width: 160,
                       height: 80,
                     )),
-                    Text("Student")
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Student",
+                      style: TextStyle(
+                        fontFamily: 'PT-Sans',
+                        fontSize: 20,
+                        color: Colors.awsMixedColor,
+                      ),
+                    ),
 
                   ],
                 ),
@@ -117,7 +128,8 @@ class _ChooseRoleScreenState extends State<ChooseRoleScreen> {
         ),
       ),
       onTap: () {
-        //_showToast("Clicked Item $index");
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => SignUpScreenAsStudent()));
 
       },
     );
@@ -145,7 +157,14 @@ class _ChooseRoleScreenState extends State<ChooseRoleScreen> {
                       width: 160,
                       height: 80,
                     )),
-                    Text("Teacher")
+                    Text(
+                      "Teacher",
+                      style: TextStyle(
+                        fontFamily: 'PT-Sans',
+                        fontSize: 20,
+                        color: Colors.awsMixedColor,
+                      ),
+                    ),
 
                   ],
                 ),
@@ -158,7 +177,8 @@ class _ChooseRoleScreenState extends State<ChooseRoleScreen> {
         ),
       ),
       onTap: () {
-        //_showToast("Clicked Item $index");
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => SignUpAsTeacherScreen()));
 
       },
     );
