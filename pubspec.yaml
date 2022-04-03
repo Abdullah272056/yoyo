@@ -38,6 +38,11 @@ dependencies:
   otp_text_field: ^1.1.1
   # api
   http: ^0.13.0
+  #date
+  intl: ^0.17.0
+  #share prefrence
+  share_plus: ^3.0.4
+  shared_preferences: ^2.0.11
 
 dev_dependencies:
   flutter_test:

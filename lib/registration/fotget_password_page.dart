@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:aws_exam_portal/api%20service/api_service.dart';
 import 'package:aws_exam_portal/background/background.dart';
 import 'package:aws_exam_portal/registration/verification_reset_password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart';
 
 import '../gradiant_icon.dart';
 
@@ -18,7 +20,7 @@ class ForgetPasswordScreen extends StatefulWidget {
 }
 
 class _ForgetPasswordState extends State<ForgetPasswordScreen> {
-  TextEditingController? phoneNumber = new TextEditingController();
+  TextEditingController? _emailController = new TextEditingController();
   bool _isObscure = true;
   bool _isCountingStatus=false;
   String _time="4:00";
@@ -79,12 +81,12 @@ class _ForgetPasswordState extends State<ForgetPasswordScreen> {
                             height: 60,
                           ),
 
-                          _buildTextFieldPhone(
+                          _buildTextFieldEmail(
                             // hintText: 'Phone Number',
                             obscureText: false,
                             prefixedIcon:  GradientIcon(
-                              Icons.phone,
-                              26,
+                              Icons.email,
+                              24,
                               LinearGradient(
                                 colors: <Color>[
                                   Colors.awsStartColor,
@@ -96,7 +98,7 @@ class _ForgetPasswordState extends State<ForgetPasswordScreen> {
                               ),
                             ),
 
-                            labelText: "Phone Number",
+                            labelText: "Email",
                           ),
 
                           const SizedBox(
@@ -132,7 +134,8 @@ class _ForgetPasswordState extends State<ForgetPasswordScreen> {
 
 
 
-  Widget _buildTextFieldPhone({
+
+  Widget _buildTextFieldEmail({
     required bool obscureText,
     Widget? prefixedIcon,
     String? hintText,
@@ -141,14 +144,13 @@ class _ForgetPasswordState extends State<ForgetPasswordScreen> {
     return Container(
       color: Colors.transparent,
       child: TextField(
+        controller: _emailController,
         cursorColor: Colors.awsCursorColor,
         cursorWidth: 1.5,
-        controller: phoneNumber,
         textInputAction: TextInputAction.next,
         style: const TextStyle(color: Colors.black, fontSize: 18),
         decoration: InputDecoration(
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-          labelText: labelText,
           filled: true,
           fillColor: Colors.white,
           contentPadding: const EdgeInsets.all(15),
@@ -159,6 +161,7 @@ class _ForgetPasswordState extends State<ForgetPasswordScreen> {
           enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.awsStartColor, width: .2),
           ),
+          labelText: labelText,
           labelStyle: const TextStyle(
             color: Colors.hint_color,
           ),
@@ -169,13 +172,7 @@ class _ForgetPasswordState extends State<ForgetPasswordScreen> {
             fontFamily: 'PTSans',
           ),
         ),
-        keyboardType: TextInputType.phone,
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp('[0-9+]')),
-          LengthLimitingTextInputFormatter(
-            13,
-          ),
-        ],
+        keyboardType: TextInputType.emailAddress,
       ),
     );
   }
@@ -185,14 +182,14 @@ class _ForgetPasswordState extends State<ForgetPasswordScreen> {
   Widget _buildNextButton() {
     return ElevatedButton(
       onPressed: () {
-        String phoneTxt = phoneNumber!.text;
-        if (_inputValid(phoneTxt) == false) {
+        String emailTxt = _emailController!.text;
+        if (_inputValid(emailTxt) == false) {
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) =>
                       const VerificationResetPasswordScreen("12")));
-          //_sendMobileNumber(phoneTxt);
+          _sendEmailForOtp(emailTxt);
         } else {}
 
 
@@ -227,20 +224,58 @@ class _ForgetPasswordState extends State<ForgetPasswordScreen> {
       ),
     );
   }
+  _sendEmailForOtp(String email) async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        _showLoadingDialog(context);
+        try {
+          Response response = await post(
+              Uri.parse('$BASE_URL_API$SUB_URL_API_FORGRT_PASSWORD'),
+              body: {
+                'email': email,
+              });
+          Navigator.of(context).pop();
+          if (response.statusCode == 200) {
+            setState(() {
+              _showToast("success");
+              var data = jsonDecode(response.body.toString());
+              userId = data['data']["user_id"].toString();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          VerificationResetPasswordScreen(userId)));
+            });
+          } else if (response.statusCode == 401) {
+            var data = jsonDecode(response.body.toString());
+            _showToast(data['message']);
+          } else {
+            var data = jsonDecode(response.body.toString());
+            //print(data['message']);
+            _showToast(data['message']);
+          }
+        } catch (e) {
+          Navigator.of(context).pop();
+          print(e.toString());
+        }
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.cancel();
+      _showToast("No Internet Connection!");
+    }
+  }
 
 
-  _inputValid(String phone) {
-    if (phone.isEmpty) {
-      _showToast("Phone can't empty");
+  _inputValid(String email) {
+    if (email.isEmpty) {
+      _showToast("E-mail can't empty");
       return;
     }
-
-    if (phone.length < 8) {
-      _showToast("Phone can't smaller than 8 digit");
-      return;
-    }
-    if (phone.length > 13) {
-      _showToast("Phone can't bigger than 13 digit");
+    if (!RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(email)) {
+      _showToast("Enter valid email");
       return;
     }
     return false;

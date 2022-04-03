@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 
 import '../gradiant_icon.dart';
+import 'VerificationAfterRegistration.dart';
 import 'log_in_page.dart';
 
 
@@ -241,7 +242,7 @@ class _SignUpScreenAsTeacherScreenState extends State<SignUpAsTeacherScreen> {
 
 
   _signUp(
-      {required String name,
+      { required String name,
         required String email,
         required String mobile,
         required String password,
@@ -249,7 +250,7 @@ class _SignUpScreenAsTeacherScreenState extends State<SignUpAsTeacherScreen> {
     try {
       final result = await InternetAddress.lookup('example.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        _showLoadingDialog(context);
+        _showLoadingDialog(context,"Creating...");
         try {
           Response response =
           await post(Uri.parse('$BASE_URL_API$SUB_URL_API_SIGN_UP_AS_TEACHER'), body: {
@@ -258,12 +259,19 @@ class _SignUpScreenAsTeacherScreenState extends State<SignUpAsTeacherScreen> {
             'phone_number': mobile,
             'password': password,
           });
-          Navigator.of(context).pop();
-          if (response.statusCode == 200) {
+           Navigator.of(context).pop();
+          if (response.statusCode == 201) {
             _showToast("success");
             var data = jsonDecode(response.body.toString());
+            //_showToast(data['message']+". Please Check Your Email!");
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => VerificationAfterSignUpScreen(
+                        data['data']["id"].toString())));
 
-          } else if (response.statusCode == 302) {
+          }
+          else if (response.statusCode == 200) {
             var data = jsonDecode(response.body.toString());
             _showToast(data['message']);
           } else {
@@ -733,7 +741,7 @@ class _SignUpScreenAsTeacherScreenState extends State<SignUpAsTeacherScreen> {
         fontSize: 16.0);
   }
 
-  void _showLoadingDialog(BuildContext context) {
+  void _showLoadingDialog(BuildContext context,String message) {
     showDialog(
       context: context,
       builder: (context) {
@@ -746,20 +754,20 @@ class _SignUpScreenAsTeacherScreenState extends State<SignUpAsTeacherScreen> {
                       left: 15.0, right: 15.0, top: 20, bottom: 20),
                   child: Center(
                     child: Row(
-                      children: const [
+                      children:  [
                         SizedBox(
                           width: 10,
                         ),
                         CircularProgressIndicator(
-                          backgroundColor: Colors.appRed,
-                          color: Colors.black,
+                          backgroundColor: Colors.awsEndColor,
+                          color: Colors.awsStartColor,
                           strokeWidth: 5,
                         ),
                         SizedBox(
                           width: 12,
                         ),
                         Text(
-                          "Checking...",
+                          message,
                           style: TextStyle(fontSize: 20),
                         )
                       ],

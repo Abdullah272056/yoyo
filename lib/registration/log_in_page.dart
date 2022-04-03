@@ -309,6 +309,7 @@ class _LogInScreenState extends State<LogInScreen> {
            // _logInUser(phoneTxt, passwordTxt);
 
             Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const HomeScreen()));
+
           } else {}
           //Navigator.push(context,MaterialPageRoute(builder: (context)=>SignUpScreen()));
         },

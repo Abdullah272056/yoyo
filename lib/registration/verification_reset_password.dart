@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:aws_exam_portal/background/background.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
 
@@ -40,7 +41,7 @@ class _VerificationResetPasswordState
   void initState() {
     super.initState();
     //countDown();
-    //startTimer();
+    startTimer();
     // passwordController=TextEditingController(text:SharedPref().readUserId());
   }
 
@@ -142,6 +143,29 @@ class _VerificationResetPasswordState
     );
   }
 
+  startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+          (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            timer.cancel();
+            _isCountingStatus=true;
+          });
+        } else {
+          setState(() {
+            _start--;
+            final df = DateFormat('mm:ss');
+            _time=df.format(new DateTime.fromMillisecondsSinceEpoch(_start*1000)).toString();
+            // timetxt=df.format(new DateTime.fromMillisecondsSinceEpoch(_start*1000));
+
+          });
+        }
+      },
+    );
+  }
+
   Widget _buildTextFieldOTP({
     required bool obscureText,
     Widget? prefixedIcon,
@@ -213,6 +237,7 @@ class _VerificationResetPasswordState
       ),
     );
   }
+
 
 
   Widget _buildNextButton() {
