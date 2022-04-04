@@ -14,6 +14,7 @@ String SUB_URL_API_VERIFICATION_AFTER_REGISTRATION = "email-verify/";
 // individual teacher all class room list
 String SUB_URL_API_TEACHERS_ALL_CLASS_ROOM_LIST = "classroom/";
 String SUB_URL_API_TEACHERS_CLASS_ROOM_CREATE = "classroom/";
+String SUB_URL_API_TEACHERS_CLASS_ROOM_UPDATE = "classroom/";
 
 String SUB_URL_API = "v1/otp/";
 String SUB_URL_API_LOG_IN = "v1/user-login/";

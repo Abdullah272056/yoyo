@@ -20,18 +20,18 @@ noItemFound(String text) {
                       children: [
                         //no_item_found.png
                         Image.asset(
-                          "assets/images/no_item_found.png",
+                          "assets/images/search.png",
                           width: 80,
                           height: 80,
                         ),
                         SizedBox(
-                          height: 8,
+                          height: 15,
                         ),
                         Text(
                           text,
                           style: TextStyle(
                             fontSize: 18,
-                            color: Colors.hint_color,
+                            color: Colors.awsMixedColor,
                           ),
                         ),
                         SizedBox(

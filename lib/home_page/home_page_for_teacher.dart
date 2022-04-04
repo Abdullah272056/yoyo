@@ -6,6 +6,7 @@ import 'package:aws_exam_portal/api%20service/NoDataFound.dart';
 import 'package:aws_exam_portal/api%20service/api_service.dart';
 import 'package:aws_exam_portal/api%20service/sharePreferenceDataSaveName.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,6 +24,7 @@ class HomeForTeacherScreen extends StatefulWidget {
 class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
 
   TextEditingController? _classRoomNameController = TextEditingController();
+  TextEditingController? _classRoomNameUpdateController = TextEditingController();
   bool _isObscure = true;
 
   TextEditingController? otpEditTextController = new TextEditingController();
@@ -44,7 +46,7 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)  {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.backGroundColor,
@@ -217,7 +219,7 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
                   )
                 ] else ...[
                   Expanded(
-                    child: NoDataFound().noItemFound("NO ROOM FOUND!"),
+                    child: NoDataFound().noItemFound("Class Room Not Found!"),
                   ),
                 ],
               ]
@@ -271,6 +273,50 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
       ),
     );
   }
+
+  Widget _buildUpdateClassRoomName({
+    required bool obscureText,
+    String? hintText,
+    String? labelText,
+  }) {
+    return Container(
+      color: Colors.transparent,
+      child: TextField(
+        controller: _classRoomNameUpdateController,
+        textInputAction: TextInputAction.next,
+        cursorColor: Colors.awsCursorColor,
+        cursorWidth: 1.5,
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 18,
+        ),
+        decoration: InputDecoration(
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          labelText: labelText,
+          labelStyle: TextStyle(
+            color: Colors.hint_color,
+          ),
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: const EdgeInsets.all(15),
+          // prefixIcon: prefixedIcon,
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.awsEndColor, width: 1),
+          ),
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.awsStartColor, width: .2),
+          ),
+          hintText: hintText,
+          hintStyle: const TextStyle(
+            color: Colors.hint_color,
+            fontWeight: FontWeight.normal,
+            fontFamily: 'PTSans',
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildRoomAddButton() {
     return SizedBox(
       height: 50,
@@ -312,6 +358,47 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
       ),
     );
   }
+  Widget _buildRoomUpdateButton(String class_room_id) {
+    return SizedBox(
+      height: 50,
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(
+            Colors.awsMixedColor,
+          ),
+          elevation: MaterialStateProperty.all(6),
+          shape: MaterialStateProperty.all(
+            const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(5),
+              ),
+            ),
+          ),
+        ),
+        child: const Text(
+          'Update',
+          style: TextStyle(
+            fontFamily: 'PT-Sans',
+            fontSize: 18,
+            fontWeight: FontWeight.normal,
+            color: Colors.white,
+          ),
+        ),
+        onPressed: () {
+          String classRoomNameTxt = _classRoomNameUpdateController!.text;
+          if (classRoomNameTxt.isEmpty) {
+            _showToast("Class room name can't empty!");
+            return;
+          }
+          Navigator.of(context).pop();
+          _updateClassRoomName(classRoomNameTxt,_userId,class_room_id);
+          //_showToast(classRoomNameTxt);
+
+        },
+      ),
+    );
+  }
 
   Widget _buildTeacherClassRoomList() {
     return GridView.builder(
@@ -333,70 +420,171 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
                 borderRadius: BorderRadius.circular(7.0),
                 child: Container(
                   width: 160,
+                  height: 100,
                   color: Colors.white,
                   child: Column(
                     children: [
+                      Flex(direction: Axis.horizontal,
+                        children:  [
+
+                          Expanded(child: SizedBox()),
+                          PopupMenuButton<int>(
+                              itemBuilder: (BuildContext context) => <PopupMenuItem<int>>[
+                                new PopupMenuItem<int>(
+                                    value: 1, child: new Text('Copy')),
+                                new PopupMenuItem<int>(
+                                    value: 2, child: new Text('Edit')),
+                                new PopupMenuItem<int>(
+                                    value: 3, child: new Text('Delete')),
+                                new PopupMenuItem<int>(
+                                    value: 4, child: new Text('Cancel')),
+
+                              ],
+                              onSelected: (int value) {
+                                if(value==1){
+                                  _showToast("text copied");
+                                  Clipboard.setData(ClipboardData(text: teacherClassRoomList[index]["class_room_code"].toString()));
+
+                                }
+                                if(value==2){
+                                  _classRoomNameUpdateController?.text = teacherClassRoomList[index]["class_room_name"].toString();
+                                  showModalBottomSheet<dynamic>(
+                                    backgroundColor: Colors.white,
+                                    isDismissible: true,
+                                    context: context,
+
+                                    isScrollControlled: true,
+                                    builder: (BuildContext context) {
+
+                                      return StatefulBuilder(
+                                          builder: (BuildContext context, StateSetter setState) {
+                                            return  Padding(
+                                              padding:
+                                              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                              //const EdgeInsets.only(left: 15, top: 5, right: 10, bottom: 10),
+                                              child:SingleChildScrollView(
+                                                child: Padding(
+                                                  padding:
+                                                  const EdgeInsets.only(left: 15, top: 5, right: 10, bottom: 10),
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      Center(
+                                                        // child: Icon(Icons.arrow_drop_down_sharp,size: 40,),
+                                                        child: InkWell(
+                                                          child: Image.asset(
+                                                            "assets/images/drop_down.png",
+                                                            width: 40,
+                                                            height: 20,
+                                                          ),
+                                                          onTap: () {
+                                                            Navigator.of(context).pop();
+                                                          },
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 15,
+                                                      ),
+                                                      const Text(
+                                                        "Update Class Room",
+                                                        style: TextStyle(
+                                                            fontSize: 18,
+                                                            color: Colors.black,
+                                                            fontWeight: FontWeight.bold),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 25,
+                                                      ),
+
+                                                      _buildUpdateClassRoomName(
+                                                          obscureText: false,
+                                                          labelText: "Class Room Name"),
+
+                                                      const SizedBox(
+                                                        height: 25,
+                                                      ),
+                                                      _buildRoomUpdateButton(teacherClassRoomList[index]["class_room_id"].toString()),
+                                                      const SizedBox(
+                                                        height: 15,
+                                                      ),
+
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                            ;
+                                          });
+                                    },
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(25.0),
+                                          topRight: Radius.circular(25.0)),
+                                    ),
+                                  );
+                                }
+                                if(value==3){
+                                  _showToast("Delete");
+                                }
+
+                              }),
+
+                        ],
+                      ),
+
                       Expanded(
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Class Room Name",
-                                style: TextStyle(
-                                  color: Colors.awsEndColor,
-                                  fontSize: 16,
-                                ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Class Room Name",
+                              style: TextStyle(
+                                color: Colors.awsEndColor,
+                                fontSize: 16,
                               ),
-                              Text(
-                                  teacherClassRoomList[index]["class_room_name"]
-                                      .toString(),
-                                  style: TextStyle(
-                                      color: Colors.awsEndColor,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700)),
-                            ],
-                          ),
+                            ),
+                            SizedBox(height: 5,),
+                            Text(
+                                teacherClassRoomList[index]["class_room_name"]
+                                    .toString(),
+                                style: TextStyle(
+                                    color: Colors.awsEndColor,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700)),
+
+                            SizedBox(height: 15,),
+
+                            Text(
+                              "Class Room Code",
+                              style: TextStyle(
+                                color: Colors.awsEndColor,
+                                fontSize: 16,
+                              ),
+                            ),
+                            SizedBox(height: 5,),
+                            Text(
+                                teacherClassRoomList[index]["class_room_code"]
+                                    .toString(),
+                                style: TextStyle(
+                                    color: Colors.awsEndColor,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700))
+
+
+                          ],
                         ),
                       ),
-                      Expanded(
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Class Room Code",
-                                style: TextStyle(
-                                  color: Colors.awsEndColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                  teacherClassRoomList[index]["class_room_code"]
-                                      .toString(),
-                                  style: TextStyle(
-                                      color: Colors.awsEndColor,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700)),
-                            ],
-                          ),
-                        ),
-                      ),
+
                     ],
                   ),
                 ),
               ),
             ),
             onTap: () {
-              //_showToast("Clicked Item $index");
+              _showToast("Clicked Item $index");
 
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (context) => RoomDetailsScreen(
-              //             offerDataList[index]["room_id"].toString())));
             },
           );
         });
@@ -484,7 +672,8 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
               //_showToast(teacherClassRoomList.length.toString());
               shimmerStatus = false;
             });
-          } else {
+          }
+          else {
             Fluttertoast.cancel();
             //_showToast("Failed");
           }
@@ -514,6 +703,44 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
               });
           Navigator.of(context).pop();
           if (response.statusCode == 201) {
+
+            _getTeacherRoomDataList(_userId);
+            // setState(() {
+            //   _showToast("success");
+            // });
+          }
+          else if (response.statusCode == 401) {
+            var data = jsonDecode(response.body.toString());
+            _showToast(data['message']);
+          } else {
+            var data = jsonDecode(response.body.toString());
+            //print(data['message']);
+            _showToast(data['message']);
+          }
+        } catch (e) {
+          Navigator.of(context).pop();
+          print(e.toString());
+        }
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.cancel();
+      _showToast("No Internet Connection!");
+    }
+  }
+  _updateClassRoomName(String roomName,String u_id,String class_room_id) async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        _showLoadingDialog(context,"Creating...");
+        try {
+          Response response = await put(
+              Uri.parse('$BASE_URL_API$SUB_URL_API_TEACHERS_CLASS_ROOM_UPDATE$class_room_id/'),
+              body: {
+                'class_room_name': roomName,
+                'user_id': u_id,
+              });
+          Navigator.of(context).pop();
+          if (response.statusCode == 200) {
 
             _getTeacherRoomDataList(_userId);
             // setState(() {

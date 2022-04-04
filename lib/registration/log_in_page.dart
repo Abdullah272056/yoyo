@@ -193,6 +193,7 @@ class _LogInScreenState extends State<LogInScreen> {
       child: TextField(
         cursorColor: Colors.awsCursorColor,
         cursorWidth: 1.5,
+        maxLength: 13,
         controller: phoneNumberController,
         textInputAction: TextInputAction.next,
         style: const TextStyle(color: Colors.black, fontSize: 18),

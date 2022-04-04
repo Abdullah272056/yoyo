@@ -285,8 +285,6 @@ class _ForgetPasswordState extends State<ForgetPasswordScreen> {
         fontSize: 16.0);
   }
 
-
-
   void _showLoadingDialog(BuildContext context) {
     showDialog(
       context: context,
