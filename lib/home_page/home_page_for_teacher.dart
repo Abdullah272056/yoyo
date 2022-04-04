@@ -21,8 +21,7 @@ class HomeForTeacherScreen extends StatefulWidget {
 }
 
 class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
-  TextEditingController? phoneNumberController = TextEditingController();
-  TextEditingController? passwordController = TextEditingController();
+
   TextEditingController? _classRoomNameController = TextEditingController();
   bool _isObscure = true;
 
@@ -138,7 +137,7 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
                                           const SizedBox(
                                             height: 25,
                                           ),
-                                          _buildFilterButton(),
+                                          _buildRoomAddButton(),
                                           const SizedBox(
                                             height: 15,
                                           ),
@@ -272,7 +271,7 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
       ),
     );
   }
-  Widget _buildFilterButton() {
+  Widget _buildRoomAddButton() {
     return SizedBox(
       height: 50,
       width: double.infinity,
@@ -300,7 +299,14 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
           ),
         ),
         onPressed: () {
-          _showToast("Ok");
+          String classRoomNameTxt = _classRoomNameController!.text;
+          if (classRoomNameTxt.isEmpty) {
+            _showToast("Class room name can't empty!");
+            return;
+          }
+          Navigator.of(context).pop();
+          _createClassRoomName(classRoomNameTxt,_userId);
+          //_showToast(classRoomNameTxt);
 
         },
       ),
@@ -492,6 +498,85 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
       Fluttertoast.cancel();
       _showToast("No Internet Connection!");
     }
+  }
+
+  _createClassRoomName(String roomName,String u_id) async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        _showLoadingDialog(context,"Creating...");
+        try {
+          Response response = await post(
+              Uri.parse('$BASE_URL_API$SUB_URL_API_TEACHERS_CLASS_ROOM_CREATE'),
+              body: {
+                'class_room_name': roomName,
+                'user_id': u_id,
+              });
+          Navigator.of(context).pop();
+          if (response.statusCode == 201) {
+
+            _getTeacherRoomDataList(_userId);
+            // setState(() {
+            //   _showToast("success");
+            // });
+          }
+          else if (response.statusCode == 401) {
+            var data = jsonDecode(response.body.toString());
+            _showToast(data['message']);
+          } else {
+            var data = jsonDecode(response.body.toString());
+            //print(data['message']);
+            _showToast(data['message']);
+          }
+        } catch (e) {
+          Navigator.of(context).pop();
+          print(e.toString());
+        }
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.cancel();
+      _showToast("No Internet Connection!");
+    }
+  }
+  void _showLoadingDialog(BuildContext context, String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        // return VerificationScreen();
+        return Dialog(
+
+          child: Wrap(
+            children: [
+              Container(
+                  margin: const EdgeInsets.only(
+                      left: 15.0, right: 15.0, top: 20, bottom: 20),
+                  child: Center(
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 10,
+                        ),
+                        const CircularProgressIndicator(
+                          backgroundColor: Colors.appRed,
+                          strokeWidth: 5,
+                        ),
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        Text(
+                          message,
+                          style: const TextStyle(fontSize: 20),
+                        )
+                      ],
+                    ),
+                  ))
+            ],
+            // child: VerificationScreen(),
+          ),
+        );
+      },
+    );
   }
 
   _showToast(String message) {
