@@ -1,19 +1,21 @@
 
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:aws_exam_portal/api%20service/api_service.dart';
+import 'package:aws_exam_portal/api%20service/sharePreferenceDataSaveName.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-
-
-
-
-
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class HomeForTeacherScreen extends StatefulWidget {
+  const HomeForTeacherScreen({Key? key}) : super(key: key);
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeForTeacherScreen> createState() => _HomeForTeacherScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
   TextEditingController? phoneNumberController = TextEditingController();
   TextEditingController? passwordController = TextEditingController();
   bool _isObscure = true;
@@ -22,6 +24,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   TextEditingController? otpEditTextController = new TextEditingController();
   String _otpTxt = "";
+  String _userId = "";
+  bool shimmerStatus=true;
+  List teacherRoomList=[];
+  var teacherRoomListResponse;
+
+  @override
+  @mustCallSuper
+  initState() {
+    super.initState();
+   // _getTeacherRoomDataList();
+    loadUserIdFromSharePref().then((_) {
+
+      _getTeacherRoomDataList(_userId);
+    });
+    //loadUserIdFromSharePref();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ).copyWith(top: 20),
               child: Column(
                 children: [
-                  Text("Home Page"),
+                  Text("Home Page for teacher"),
                 ],
               ),
             ),
@@ -50,6 +68,41 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+
+  _getTeacherRoomDataList(String u_id) async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        shimmerStatus=true;
+        try {
+          var response = await get(
+            Uri.parse(
+                '$BASE_URL_API$SUB_URL_API_TEACHERS_ALL_CLASS_ROOM_LIST$u_id/'),
+          );
+
+          if (response.statusCode == 200) {
+            setState(() {
+              //_showToast("success");
+              var data = jsonDecode(response.body);
+              teacherRoomList = data["data"];
+              _showToast(teacherRoomList.length.toString());
+              shimmerStatus=false;
+            });
+          } else {
+            Fluttertoast.cancel();
+            //_showToast("Failed");
+          }
+        } catch (e) {
+          Fluttertoast.cancel();
+          print(e.toString());
+          //_showToast("Failed");
+        }
+      }
+    } on SocketException catch (e) {
+      Fluttertoast.cancel();
+      _showToast("No Internet Connection!");
+    }
+  }
 
   _showToast(String message) {
     Fluttertoast.showToast(
@@ -183,7 +236,17 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  loadUserIdFromSharePref() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      if(sharedPreferences.getString(pref_user_Id)!=null){
+        _userId = sharedPreferences.getString(pref_user_Id)!;
+      }else{
+        _userId="30";
+      }
 
+    });
+  }
 }
 
 

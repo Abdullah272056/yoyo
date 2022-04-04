@@ -10,6 +10,10 @@ String SUB_URL_API_FORGRT_PASSWORD = "send-email-otp-for-forget-password/";
 String SUB_URL_API_RESEND_CODE = "otp-resend/";
 String SUB_URL_API_VERIFICATION_AFTER_REGISTRATION = "email-verify/";
 
+//class room
+// individual teacher all class room list
+String SUB_URL_API_TEACHERS_ALL_CLASS_ROOM_LIST = "classroom/";
+
 String SUB_URL_API = "v1/otp/";
 String SUB_URL_API_LOG_IN = "v1/user-login/";
 String SUB_URL_API_RESEND_OTP = "v1/otp-resend/";
