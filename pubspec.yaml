@@ -43,6 +43,8 @@ dependencies:
   #share prefrence
   share_plus: ^3.0.4
   shared_preferences: ^2.0.11
+  #shimmer
+  shimmer: ^2.0.0
 
 dev_dependencies:
   flutter_test:
