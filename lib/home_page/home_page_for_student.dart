@@ -2,12 +2,15 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:aws_exam_portal/api%20service/NoDataFound.dart';
 import 'package:aws_exam_portal/api%20service/api_service.dart';
 import 'package:aws_exam_portal/api%20service/sharePreferenceDataSaveName.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 
 
 
@@ -33,6 +36,9 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
   String _accessToken = "";
   String _refreshToken = "";
   bool shimmerStatus = true;
+
+  List studentJoinClassRoomList = [];
+
   @override
   @mustCallSuper
   initState() {
@@ -168,29 +174,314 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
                 ),
               ),
             )),
-        body: SizedBox(
-          width: double.infinity,
-          height: double.infinity,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 40,
-              ).copyWith(top: 20),
-              child: Column(
-                children: [
-                  Text("Home Page"),
-                ],
-              ),
-            ),
-          )
+        body:  RefreshIndicator(
+          color: Colors.white,
+          backgroundColor: Colors.purple,
+          triggerMode: RefreshIndicatorTriggerMode.anywhere,
+          onRefresh: () async {
+            await Future.delayed(const Duration(seconds: 1));
 
-          ,
+            updateDataAfterRefresh();
+          },
+          child: Flex(
+            direction: Axis.vertical,
+            children: [
+              if (shimmerStatus) ...[
+                Expanded(
+                    child: Flex(
+                      direction: Axis.vertical,
+                      children: [
+                        SizedBox(
+                          height: 8,
+                        ),
+                        _buildClassRoomListShimmer(),
+                      ],
+                    ))
+              ] else ...[
+                if (studentJoinClassRoomList != null &&
+                    studentJoinClassRoomList.length > 0) ...[
+                  Expanded(
+                    child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                        ).copyWith(top: 5, bottom: 10),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Expanded(
+                              child: _buildStudentJoinedClassRoomList(),
+                              flex: 1,
+                            ),
+                          ],
+                        )),
+                  )
+                ] else ...[
+                  Expanded(
+                    child: NoDataFound().noItemFound("Class Room Not Found!"),
+                  ),
+                ],
+              ]
+            ],
+          ),
         ),
       ),
     );
   }
 
 
+  Widget _buildClassRoomListShimmer() {
+    return Expanded(
+      child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            return ListView(
+              children: [
+                SizedBox(
+                  height: constraints.maxHeight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 5, right: 5, top: 5),
+                    child: GridView.builder(
+                        itemCount: 16,
+                        physics: const NeverScrollableScrollPhysics(),
+                        // physics: const AlwaysScrollableScrollPhysics(),
+                        gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 0.0,
+                          mainAxisSpacing: 0.0,
+                        ),
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 1,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(7.0),
+                              child: Container(
+                                width: 160,
+                                color: Colors.white,
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: Stack(children: <Widget>[
+                                        Shimmer.fromColors(
+                                          baseColor: Colors.shimmer_baseColor,
+                                          highlightColor:
+                                          Colors.shimmer_highlightColor,
+                                          child: Container(
+                                            height: double.infinity,
+                                            width: double.infinity,
+                                            color: Colors.black.withOpacity(0.3),
+                                          ),
+                                        ),
+                                      ]),
+                                      flex: 1,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+                ),
+              ],
+            );
+          }),
+      flex: 1,
+    );
+  }
+  Widget _buildStudentJoinedClassRoomList() {
+    return GridView.builder(
+        itemCount:
+        studentJoinClassRoomList == null ? 0 : studentJoinClassRoomList.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 2.0,
+          mainAxisSpacing: 2.0,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          return InkResponse(
+            child: Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(7),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(7.0),
+                child: Container(
+                  width: 160,
+                  height: 100,
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      Flex(direction: Axis.horizontal,
+                        children:  [
+
+                          Expanded(child: SizedBox()),
+                          PopupMenuButton<int>(
+                              itemBuilder: (BuildContext context) => <PopupMenuItem<int>>[
+                                new PopupMenuItem<int>(
+                                    value: 1, child: new Text('Copy')),
+                                new PopupMenuItem<int>(
+                                    value: 2, child: new Text('Edit')),
+                                new PopupMenuItem<int>(
+                                    value: 3, child: new Text('Delete')),
+                                new PopupMenuItem<int>(
+                                    value: 4, child: new Text('Cancel')),
+
+                              ],
+                              onSelected: (int value) {
+                                if(value==1){
+                                  _showToast("text copied");
+                                 /// Clipboard.setData(ClipboardData(text: teacherClassRoomList[index]["class_room_code"].toString()));
+
+                                }
+                                if(value==2){
+                                  // _classRoomNameUpdateController?.text = teacherClassRoomList[index]["class_room_name"].toString();
+                                  // showModalBottomSheet<dynamic>(
+                                  //   backgroundColor: Colors.white,
+                                  //   isDismissible: true,
+                                  //   context: context,
+                                  //
+                                  //   isScrollControlled: true,
+                                  //   builder: (BuildContext context) {
+                                  //
+                                  //     return StatefulBuilder(
+                                  //         builder: (BuildContext context, StateSetter setState) {
+                                  //           return  Padding(
+                                  //             padding:
+                                  //             EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                  //             //const EdgeInsets.only(left: 15, top: 5, right: 10, bottom: 10),
+                                  //             child:SingleChildScrollView(
+                                  //               child: Padding(
+                                  //                 padding:
+                                  //                 const EdgeInsets.only(left: 15, top: 5, right: 10, bottom: 10),
+                                  //                 child: Column(
+                                  //                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  //                   mainAxisSize: MainAxisSize.min,
+                                  //                   children: <Widget>[
+                                  //                     Center(
+                                  //                       // child: Icon(Icons.arrow_drop_down_sharp,size: 40,),
+                                  //                       child: InkWell(
+                                  //                         child: Image.asset(
+                                  //                           "assets/images/drop_down.png",
+                                  //                           width: 40,
+                                  //                           height: 20,
+                                  //                         ),
+                                  //                         onTap: () {
+                                  //                           Navigator.of(context).pop();
+                                  //                         },
+                                  //                       ),
+                                  //                     ),
+                                  //                     const SizedBox(
+                                  //                       height: 15,
+                                  //                     ),
+                                  //                     const Text(
+                                  //                       "Update Class Room",
+                                  //                       style: TextStyle(
+                                  //                           fontSize: 18,
+                                  //                           color: Colors.black,
+                                  //                           fontWeight: FontWeight.bold),
+                                  //                     ),
+                                  //                     const SizedBox(
+                                  //                       height: 25,
+                                  //                     ),
+                                  //
+                                  //                     _buildUpdateClassRoomName(
+                                  //                         obscureText: false,
+                                  //                         labelText: "Class Room Name"),
+                                  //
+                                  //                     const SizedBox(
+                                  //                       height: 25,
+                                  //                     ),
+                                  //                     _buildRoomUpdateButton(teacherClassRoomList[index]["class_room_id"].toString()),
+                                  //                     const SizedBox(
+                                  //                       height: 15,
+                                  //                     ),
+                                  //
+                                  //                   ],
+                                  //                 ),
+                                  //               ),
+                                  //             ),
+                                  //           )
+                                  //           ;
+                                  //         });
+                                  //   },
+                                  //   shape: const RoundedRectangleBorder(
+                                  //     borderRadius: BorderRadius.only(
+                                  //         topLeft: Radius.circular(25.0),
+                                  //         topRight: Radius.circular(25.0)),
+                                  //   ),
+                                  // );
+                                }
+                                if(value==3){
+                                  _showToast("Delete");
+                                }
+
+                              }),
+
+                        ],
+                      ),
+
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Class Room Name",
+                              style: TextStyle(
+                                color: Colors.awsEndColor,
+                                fontSize: 16,
+                              ),
+                            ),
+                            SizedBox(height: 5,),
+                            Text(
+                                studentJoinClassRoomList[index]["classroom_info"]["class_room_name"]
+                                    .toString(),
+                                style: TextStyle(
+                                    color: Colors.awsEndColor,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700)),
+
+                            SizedBox(height: 15,),
+
+                            Text(
+                              "Class Room Code",
+                              style: TextStyle(
+                                color: Colors.awsEndColor,
+                                fontSize: 16,
+                              ),
+                            ),
+                            SizedBox(height: 5,),
+                            Text(
+                                studentJoinClassRoomList[index]["classroom_info"]["class_room_code"]
+                                    .toString(),
+                                style: TextStyle(
+                                    color: Colors.awsEndColor,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700))
+
+
+                          ],
+                        ),
+                      ),
+
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            onTap: () {
+              _showToast("Clicked Item $index");
+
+            },
+          );
+        });
+  }
 
   Widget _buildRoomJoinButton() {
     return SizedBox(
@@ -296,7 +587,7 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
           if (response.statusCode == 200) {
 
 
-           // _getTeacherRoomDataList(_userId,_accessToken);
+            _getStudentRoomDataList(_userId,_accessToken);
             setState(() {
               _showToast("success");
             });
@@ -360,7 +651,7 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
             setState(() {
               _showToast("success");
               var data = jsonDecode(response.body);
-             // teacherClassRoomList = data["data"];
+              studentJoinClassRoomList = data["data"];
               //_showToast(teacherClassRoomList.length.toString());
               shimmerStatus = false;
             });
@@ -380,7 +671,10 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
       _showToast("No Internet Connection!");
     }
   }
-
+  void updateDataAfterRefresh() {
+    _getStudentRoomDataList(_userId,_accessToken);
+    setState(() {});
+  }
   // void _showAlertDialog(BuildContext context){
   //   showDialog(
   //     context: context,
