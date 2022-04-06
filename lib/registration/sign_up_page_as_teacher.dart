@@ -33,6 +33,11 @@ class _SignUpScreenAsTeacherScreenState extends State<SignUpAsTeacherScreen> {
   bool _isObscure2 = true;
   bool _isObscure3 = true;
 
+  String genderLabelText = "Select Gender";
+  String _genderDropDownSelectedValue = "Select Gender";
+  final List<String> _genderList = ["Select Gender", "Male", "Female", "Other"];
+  String _gender = "";
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -153,6 +158,12 @@ class _SignUpScreenAsTeacherScreenState extends State<SignUpAsTeacherScreen> {
                             ),
 
                             labelText: "Phone Number"),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        _buildGenderDropDownMenu(
+                            genderList: _genderList,
+                            dropdownValue: _genderDropDownSelectedValue),
 
                         const SizedBox(
                           height: 15,
@@ -246,6 +257,7 @@ class _SignUpScreenAsTeacherScreenState extends State<SignUpAsTeacherScreen> {
         required String email,
         required String mobile,
         required String password,
+        required String gender,
       }) async {
     try {
       final result = await InternetAddress.lookup('example.com');
@@ -259,6 +271,7 @@ class _SignUpScreenAsTeacherScreenState extends State<SignUpAsTeacherScreen> {
             'email': email,
             'phone_number': mobile,
             'password': password,
+            'gender': gender,
           });
            Navigator.of(context).pop();
           if (response.statusCode == 201) {
@@ -427,6 +440,77 @@ class _SignUpScreenAsTeacherScreenState extends State<SignUpAsTeacherScreen> {
     );
   }
 
+  //Gender Drop Down Menu
+  Widget _buildGenderDropDownMenu({
+    required List<String> genderList,
+    required String dropdownValue,
+  }) {
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        labelText: genderLabelText,
+        labelStyle: const TextStyle(
+          color: Colors.hint_color,
+        ),
+        filled: true,
+        fillColor: Colors.white,
+        contentPadding: const EdgeInsets.all(10),
+        prefixIcon: GradientIcon(
+          Icons.person,
+          24,
+          LinearGradient(
+            colors: <Color>[
+              Colors.awsStartColor,
+              Colors.awsStartColor,
+              Colors.awsEndColor,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.awsEndColor, width: 1),
+        ),
+        enabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.awsStartColor, width: .1),
+        ),
+        hintStyle: const TextStyle(
+          color: Colors.hint_color,
+          fontWeight: FontWeight.normal,
+          fontFamily: 'PTSans',
+        ),
+      ),
+      value: dropdownValue,
+      iconSize: 35,
+      isExpanded: true,
+      icon: GradientIcon(
+        Icons.arrow_drop_down_outlined,
+        30,
+        LinearGradient(
+          colors: <Color>[
+            Colors.awsStartColor,
+            Colors.awsStartColor,
+            Colors.awsEndColor,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      style: const TextStyle(color: Colors.black, fontSize: 18),
+      onChanged: (String? newValue) {
+        setState(() {
+          _genderDropDownSelectedValue = newValue!;
+        });
+      },
+      items: genderList.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
+
   Widget _buildTextFieldNewPassword({
     required bool obscureText,
     Widget? prefixedIcon,
@@ -571,6 +655,8 @@ class _SignUpScreenAsTeacherScreenState extends State<SignUpAsTeacherScreen> {
     );
   }
 
+
+
   Widget _buildSignUpButton() {
     return ElevatedButton(
       onPressed: () {
@@ -580,15 +666,25 @@ class _SignUpScreenAsTeacherScreenState extends State<SignUpAsTeacherScreen> {
         phoneTxt = _phoneNumberController!.text;
         passwordTxt = _newPasswordController!.text;
         confirmPasswordTxt = _confirmPasswordController!.text;
+        if (_genderDropDownSelectedValue == "Male") {
+          _gender = "1";
+        } else if (_genderDropDownSelectedValue == "Female") {
+          _gender = "2";
+        } else if (_genderDropDownSelectedValue == "Other") {
+          _gender = "3";
+        } else {
+          _gender = "";
+        }
 
-        if (_inputValid(nameTxt, emailTxt, phoneTxt, passwordTxt,confirmPasswordTxt) ==
+        if (_inputValid(nameTxt, emailTxt, phoneTxt, passwordTxt,confirmPasswordTxt,_gender) ==
             false) {
           _signUp(
-              name: nameTxt,
-              email: emailTxt,
-              mobile: phoneTxt,
-              password: passwordTxt,
-             );
+            name: nameTxt,
+            email: emailTxt,
+            mobile: phoneTxt,
+            password: passwordTxt,
+            gender: _gender,
+          );
         } else {}
       },
       style: ElevatedButton.styleFrom(
@@ -683,7 +779,7 @@ class _SignUpScreenAsTeacherScreenState extends State<SignUpAsTeacherScreen> {
 
   //logic method
   _inputValid(String name, String email, String phone, String password,
-      String confirmPassword) {
+      String confirmPassword,String gender ) {
     if (name.isEmpty) {
       _showToast("Name can't empty");
       return;
@@ -693,7 +789,7 @@ class _SignUpScreenAsTeacherScreenState extends State<SignUpAsTeacherScreen> {
       return;
     }
     if (!RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(email)) {
       _showToast("Enter valid email");
       return;
@@ -702,6 +798,7 @@ class _SignUpScreenAsTeacherScreenState extends State<SignUpAsTeacherScreen> {
       _showToast("phone can't empty");
       return;
     }
+
     if (phone.length < 8) {
       _showToast("phone can't smaller than 8 digit");
       return;
@@ -711,6 +808,10 @@ class _SignUpScreenAsTeacherScreenState extends State<SignUpAsTeacherScreen> {
       return;
     }
 
+    if (gender.isEmpty) {
+      _showToast("Please select gender!");
+      return;
+    }
     if (password.isEmpty) {
       _showToast("password can't empty");
       return;

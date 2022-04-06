@@ -586,11 +586,10 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
           Navigator.of(context).pop();
           if (response.statusCode == 200) {
 
-
             _getStudentRoomDataList(_userId,_accessToken);
             setState(() {
-              _showToast("success");
-            });
+                _showToast("success");
+              });
           }
           else if (response.statusCode == 401) {
             var data = jsonDecode(response.body.toString());

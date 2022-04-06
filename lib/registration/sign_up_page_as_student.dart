@@ -36,7 +36,7 @@ class _SignUpScreenAsStudentState extends State<SignUpScreenAsStudent> {
   String genderLabelText = "Select Gender";
   String _genderDropDownSelectedValue = "Select Gender";
   final List<String> _genderList = ["Select Gender", "Male", "Female", "Other"];
-
+  String _gender = "";
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +44,7 @@ class _SignUpScreenAsStudentState extends State<SignUpScreenAsStudent> {
       child: Scaffold(
         backgroundColor: Colors.backGroundColor,
         // backgroundColor: Colors.backGroundColor,
-        body:
-
-        SizedBox(
+        body: SizedBox(
           width: double.infinity,
           height: double.infinity,
           child:Stack(
@@ -136,6 +134,7 @@ class _SignUpScreenAsStudentState extends State<SignUpScreenAsStudent> {
                             ),
 
                             labelText: "Email"),
+
                         const SizedBox(
                           height: 15,
                         ),
@@ -158,6 +157,12 @@ class _SignUpScreenAsStudentState extends State<SignUpScreenAsStudent> {
                             ),
 
                             labelText: "Phone Number"),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        _buildGenderDropDownMenu(
+                            genderList: _genderList,
+                            dropdownValue: _genderDropDownSelectedValue),
 
                         const SizedBox(
                           height: 15,
@@ -230,9 +235,6 @@ class _SignUpScreenAsStudentState extends State<SignUpScreenAsStudent> {
 
             ],
           )
-
-
-
         ),
       ),
     );
@@ -246,11 +248,11 @@ class _SignUpScreenAsStudentState extends State<SignUpScreenAsStudent> {
   }
 
 
-  _signUp(
-      { required String name,
+  _signUp({ required String name,
         required String email,
         required String mobile,
         required String password,
+        required String gender,
       }) async {
     try {
       final result = await InternetAddress.lookup('example.com');
@@ -263,6 +265,7 @@ class _SignUpScreenAsStudentState extends State<SignUpScreenAsStudent> {
             'email': email,
             'phone_number': mobile,
             'password': password,
+            'gender': gender,
           });
           Navigator.of(context).pop();
           if (response.statusCode == 201) {
@@ -515,15 +518,24 @@ class _SignUpScreenAsStudentState extends State<SignUpScreenAsStudent> {
         filled: true,
         fillColor: Colors.white,
         contentPadding: const EdgeInsets.all(10),
-        prefixIcon: const Icon(
-          Icons.person,
-          color: Colors.appRed,
+        prefixIcon: GradientIcon(
+        Icons.person,
+        24,
+        LinearGradient(
+          colors: <Color>[
+            Colors.awsStartColor,
+            Colors.awsStartColor,
+            Colors.awsEndColor,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
+      ),
         focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.appRed, width: 1),
+          borderSide: BorderSide(color: Colors.awsEndColor, width: 1),
         ),
         enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.appRed, width: .1),
+          borderSide: BorderSide(color: Colors.awsStartColor, width: .1),
         ),
         hintStyle: const TextStyle(
           color: Colors.hint_color,
@@ -534,9 +546,18 @@ class _SignUpScreenAsStudentState extends State<SignUpScreenAsStudent> {
       value: dropdownValue,
       iconSize: 35,
       isExpanded: true,
-      icon: const Icon(
+      icon: GradientIcon(
         Icons.arrow_drop_down_outlined,
-        color: Colors.appRed,
+        30,
+        LinearGradient(
+          colors: <Color>[
+            Colors.awsStartColor,
+            Colors.awsStartColor,
+            Colors.awsEndColor,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
       ),
       style: const TextStyle(color: Colors.black, fontSize: 18),
       onChanged: (String? newValue) {
@@ -636,14 +657,24 @@ class _SignUpScreenAsStudentState extends State<SignUpScreenAsStudent> {
         phoneTxt = _phoneNumberController!.text;
         passwordTxt = _newPasswordController!.text;
         confirmPasswordTxt = _confirmPasswordController!.text;
+        if (_genderDropDownSelectedValue == "Male") {
+          _gender = "1";
+        } else if (_genderDropDownSelectedValue == "Female") {
+          _gender = "2";
+        } else if (_genderDropDownSelectedValue == "Other") {
+          _gender = "3";
+        } else {
+          _gender = "";
+        }
 
-        if (_inputValid(nameTxt, emailTxt, phoneTxt, passwordTxt,confirmPasswordTxt) ==
+        if (_inputValid(nameTxt, emailTxt, phoneTxt, passwordTxt,confirmPasswordTxt,_gender) ==
             false) {
           _signUp(
             name: nameTxt,
             email: emailTxt,
             mobile: phoneTxt,
             password: passwordTxt,
+            gender: _gender,
           );
         } else {}
       },
@@ -739,7 +770,7 @@ class _SignUpScreenAsStudentState extends State<SignUpScreenAsStudent> {
 
   //logic method
   _inputValid(String name, String email, String phone, String password,
-      String confirmPassword) {
+      String confirmPassword,String gender ) {
     if (name.isEmpty) {
       _showToast("Name can't empty");
       return;
@@ -758,6 +789,7 @@ class _SignUpScreenAsStudentState extends State<SignUpScreenAsStudent> {
       _showToast("phone can't empty");
       return;
     }
+
     if (phone.length < 8) {
       _showToast("phone can't smaller than 8 digit");
       return;
@@ -767,7 +799,10 @@ class _SignUpScreenAsStudentState extends State<SignUpScreenAsStudent> {
       return;
     }
 
-
+    if (gender.isEmpty) {
+      _showToast("Please select gender!");
+      return;
+    }
     if (password.isEmpty) {
       _showToast("password can't empty");
       return;
