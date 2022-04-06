@@ -58,12 +58,6 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
               icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
               onPressed: () {
                 Navigator.pop(context, true);
-                // Fluttertoast.showToast(
-                //     msg: "Back Button clicked",
-                //     toastLength: Toast.LENGTH_SHORT,
-                //     gravity: ToastGravity.CENTER,
-                //     timeInSecForIosWeb: 1
-                // );
               },
             ),
             title: const Text(
