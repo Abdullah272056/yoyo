@@ -32,14 +32,14 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
   String _userId = "";
   String _accessToken = "";
   String _refreshToken = "";
-
+  bool shimmerStatus = true;
   @override
   @mustCallSuper
   initState() {
     super.initState();
     // _getTeacherRoomDataList();
     loadUserIdFromSharePref().then((_) {
-     // _getTeacherRoomDataList(_userId,_accessToken);
+      _getStudentRoomDataList(_userId,_accessToken);
     });
     //loadUserIdFromSharePref();
   }
@@ -342,6 +342,43 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
         backgroundColor: Colors.awsMixedColor,
         textColor: Colors.white,
         fontSize: 16.0);
+  }
+
+  _getStudentRoomDataList(String u_id,String accessToken) async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        shimmerStatus = true;
+        try {
+          var response = await get(
+            Uri.parse('$BASE_URL_API$SUB_URL_API_STUDENT_ALL_CLASS_ROOM_LIST$u_id/'),
+            headers: {
+              "Authorization": "Token $accessToken",
+            },
+          );
+          if (response.statusCode == 200) {
+            setState(() {
+              _showToast("success");
+              var data = jsonDecode(response.body);
+             // teacherClassRoomList = data["data"];
+              //_showToast(teacherClassRoomList.length.toString());
+              shimmerStatus = false;
+            });
+          }
+          else {
+            Fluttertoast.cancel();
+            //_showToast("Failed");
+          }
+        } catch (e) {
+          Fluttertoast.cancel();
+          print(e.toString());
+          //_showToast("Failed");
+        }
+      }
+    } on SocketException catch (e) {
+      Fluttertoast.cancel();
+      _showToast("No Internet Connection!");
+    }
   }
 
   // void _showAlertDialog(BuildContext context){
