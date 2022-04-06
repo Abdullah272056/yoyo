@@ -1,9 +1,10 @@
 
 String BASE_URL = "http://127.0.0.1:8000/api/";
-String BASE_URL_API = "http://192.168.1.17:8000/api/";
+String BASE_URL_API = "http://192.168.1.14:8000/api/";
 
 
 //registration
+String SUB_URL_API_SIGN_IN = "user-login/";
 String SUB_URL_API_SIGN_UP_AS_STUDENT = "student-registration/";
 String SUB_URL_API_SIGN_UP_AS_TEACHER = "teacher-registration/";
 String SUB_URL_API_FORGRT_PASSWORD = "send-email-otp-for-forget-password/";

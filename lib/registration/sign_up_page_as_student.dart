@@ -33,6 +33,11 @@ class _SignUpScreenAsStudentState extends State<SignUpScreenAsStudent> {
   bool _isObscure2 = true;
   bool _isObscure3 = true;
 
+  String genderLabelText = "Select Gender";
+  String _genderDropDownSelectedValue = "Select Gender";
+  final List<String> _genderList = ["Select Gender", "Male", "Female", "Other"];
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -492,6 +497,59 @@ class _SignUpScreenAsStudentState extends State<SignUpScreenAsStudent> {
           ),
         ),
       ),
+    );
+  }
+
+  //Gender Drop Down Menu
+  Widget _buildGenderDropDownMenu({
+    required List<String> genderList,
+    required String dropdownValue,
+  }) {
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        labelText: genderLabelText,
+        labelStyle: const TextStyle(
+          color: Colors.hint_color,
+        ),
+        filled: true,
+        fillColor: Colors.white,
+        contentPadding: const EdgeInsets.all(10),
+        prefixIcon: const Icon(
+          Icons.person,
+          color: Colors.appRed,
+        ),
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.appRed, width: 1),
+        ),
+        enabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.appRed, width: .1),
+        ),
+        hintStyle: const TextStyle(
+          color: Colors.hint_color,
+          fontWeight: FontWeight.normal,
+          fontFamily: 'PTSans',
+        ),
+      ),
+      value: dropdownValue,
+      iconSize: 35,
+      isExpanded: true,
+      icon: const Icon(
+        Icons.arrow_drop_down_outlined,
+        color: Colors.appRed,
+      ),
+      style: const TextStyle(color: Colors.black, fontSize: 18),
+      onChanged: (String? newValue) {
+        setState(() {
+          _genderDropDownSelectedValue = newValue!;
+        });
+      },
+      items: genderList.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
     );
   }
 

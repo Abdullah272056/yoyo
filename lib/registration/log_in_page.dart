@@ -1,15 +1,21 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:aws_exam_portal/api%20service/api_service.dart';
+import 'package:aws_exam_portal/api%20service/sharePreferenceDataSaveName.dart';
 import 'package:aws_exam_portal/background/background.dart';
 import 'package:aws_exam_portal/home_page/home_page.dart';
 import 'package:aws_exam_portal/home_page/home_page_for_teacher.dart';
 import 'package:aws_exam_portal/registration/sign_up_page_as_teacher.dart';
+import 'package:aws_exam_portal/registration/user_active_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../gradiant_icon.dart';
+import 'VerificationAfterRegistration.dart';
 import 'choose_role.dart';
 import 'fotget_password_page.dart';
 
@@ -304,16 +310,11 @@ class _LogInScreenState extends State<LogInScreen> {
   Widget _buildLoginButton() {
     return ElevatedButton(
         onPressed: () {
-          Navigator.push(context,MaterialPageRoute(builder: (context)=>const HomeForTeacherScreen()));
-          return;
+
           String phoneTxt = phoneNumberController!.text;
           String passwordTxt = passwordController!.text;
           if (_inputValid(phoneTxt, passwordTxt) == false) {
-            //_showToast("call login user");
-           // _logInUser(phoneTxt, passwordTxt);
-
-           // Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const HomeScreen()));
-
+           _logInUser(phoneTxt, passwordTxt);
 
           }else {
 
@@ -381,6 +382,7 @@ class _LogInScreenState extends State<LogInScreen> {
       ],
     );
   }
+
 
   // Widget _buildTextFieldOTPView({
   //   required bool obscureText,
@@ -534,66 +536,94 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
 
-  // _logInUser(String mobile, String password) async {
-  //   try {
-  //     final result = await InternetAddress.lookup('example.com');
-  //     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-  //       print('connected');
-  //       _showLoadingDialog(context);
-  //       try {
-  //         Response response = await post(Uri.parse('$BASE_URL_API$SUB_URL_API_LOG_IN'),
-  //             body: {'mobile': mobile, 'password': password});
-  //         Navigator.of(context).pop();
-  //         if (response.statusCode == 200) {
-  //           setState(() {
-  //             Fluttertoast.cancel();
-  //             //_showToast("success");
-  //             var data = jsonDecode(response.body.toString());
-  //             saveUserInfo(data);
-  //             Navigator.push(
-  //                 context,
-  //                 MaterialPageRoute(
-  //                     builder: (context) =>  NavigationBarScreen(0,HomePageScreen())));
-  //             //var data=response.body.toString();
-  //             print(data['data']["user_id"]);
-  //           });
-  //         }
-  //         else if (response.statusCode == 201){
-  //
-  //           var data = jsonDecode(response.body);
-  //           Navigator.push(
-  //               context,
-  //               MaterialPageRoute(
-  //                   builder: (context) =>  SendUserForActiveScreen(data['data']["user_id"].toString())));
-  //
-  //           // var data=jsonDecode(response.body.toString());
-  //           // //var data=response.body.toString();
-  //           // print(data['message']);
-  //           // print("UserId= "+data['data']["user_name"].toString());
-  //           // print("Userphone= "+data['data']["user_phone"].toString());
-  //           // print("Useremail= "+data['data']["user_email"].toString());
-  //         } else if (response.statusCode == 400) {
-  //           var data = jsonDecode(response.body.toString());
-  //           Fluttertoast.cancel();
-  //           //  _showToast(data['message'].toString());
-  //           _showToast("phone or password not match!");
-  //         } else {
-  //           var data = jsonDecode(response.body.toString());
-  //           Fluttertoast.cancel();
-  //           _showToast(data['message'].toString());
-  //         }
-  //       } catch (e) {
-  //         Fluttertoast.cancel();
-  //         print(e.toString());
-  //         _showToast("failed");
-  //       }
-  //     }
-  //   } on SocketException catch (e) {
-  //     Fluttertoast.cancel();
-  //     _showToast("No Internet Connection!");
-  //   }
-  // }
+  _logInUser(String mobile, String password) async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        print('connected');
+        _showLoadingDialog(context,"Checking...");
+        try {
+          Response response = await post(Uri.parse('$BASE_URL_API$SUB_URL_API_SIGN_IN'),
+              body: {'phone_number': mobile, 'password': password});
 
+          if (response.statusCode == 200) {
+            Navigator.of(context).pop();
+            setState(() {
+              Fluttertoast.cancel();
+              _showToast("success");
+              var data = jsonDecode(response.body.toString());
+
+             saveUserInfo(data);
+
+              Navigator.pushAndRemoveUntil(context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+                    (route) => false,);
+
+            });
+          }
+          else if (response.statusCode == 201){
+
+            var data = jsonDecode(response.body);
+            _reSendCode( user_id: data['data']["id"].toString());
+
+          }
+          else if (response.statusCode == 400) {
+            Navigator.of(context).pop();
+            var data = jsonDecode(response.body.toString());
+            Fluttertoast.cancel();
+            //  _showToast(data['message'].toString());
+            _showToast("phone or password not match!");
+          }
+          else {
+            Navigator.of(context).pop();
+            var data = jsonDecode(response.body.toString());
+            Fluttertoast.cancel();
+            _showToast(data['message'].toString());
+          }
+        } catch (e) {
+          Navigator.of(context).pop();
+          Fluttertoast.cancel();
+          print(e.toString());
+          _showToast("failed");
+        }
+      }
+    } on SocketException catch (e) {
+      Fluttertoast.cancel();
+      _showToast("No Internet Connection!");
+    }
+  }
+  _reSendCode({required String user_id}) async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        print('connected');
+        //_showLoadingDialog(context,"Sending...");
+        try {
+          Response response = await put(
+            Uri.parse('$BASE_URL_API$SUB_URL_API_RESEND_CODE$user_id/'),
+          );
+          Navigator.of(context).pop();
+
+          if (response.statusCode == 200) {
+            _showToast("Check your email!");
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => VerificationAfterSignUpScreen(user_id)));
+
+          } else {
+            var data = jsonDecode(response.body.toString());
+            _showToast(data['message']);
+          }
+        } catch (e) {
+          print(e.toString());
+        }
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.cancel();
+      _showToast("No Internet Connection!");
+    }
+  }
   _showToast(String message) {
     Fluttertoast.showToast(
         msg: message,
@@ -687,7 +717,63 @@ class _LogInScreenState extends State<LogInScreen> {
   //   );
   // }
 
-  void _showLoadingDialog(BuildContext context){
+  void saveUserInfo(var userInfo) async {
+    try {
+      SharedPreferences sharedPreferences =
+      await SharedPreferences.getInstance();
+
+      sharedPreferences.setString(pref_user_token, userInfo['access_token'].toString());
+      sharedPreferences.setString(pref_user_refresh_token, userInfo['refresh_token'].toString());
+      // sharedPreferences.setBool(pref_login_status, true);
+      sharedPreferences.setString(pref_user_Id, userInfo['data']["id"].toString());
+      sharedPreferences.setString(pref_user_email, userInfo['data']["email"].toString());
+      sharedPreferences.setString(pref_user_gender, userInfo['data']["gender"].toString());
+      // sharedPreferences.setString(pref_user_dob, userInfo['data']["date_of_birth"].toString());
+      sharedPreferences.setString(pref_user_short_address,userInfo['data']["user_short_address"].toString());
+      // sharedPreferences.setString(pref_user_image, userInfo['data']["user_image"].toString());
+      sharedPreferences.setString(pref_user_name, userInfo['data']["username"].toString());
+      sharedPreferences.setString(pref_user_number, userInfo['data']["phone_number"].toString());
+
+      //sharedPreferences.setString(pref_user_city_id, userInfo['data']["city_id"].toString());
+
+      sharedPreferences.setString(pref_user_Is_Teacher, userInfo['data']["is_teacher"].toString());
+      sharedPreferences.setString(pref_user_Is_Student, userInfo['data']["is_student"].toString());
+
+
+    } catch (e) {
+      //code
+    }
+
+    //
+    // sharedPreferences.setString(pref_user_UUID, userInfo['data']["user_name"].toString());
+    // sharedPreferences.setBool(pref_login_firstTime, userInfo['data']["user_name"].toString());
+    // sharedPreferences.setString(pref_user_cartID, userInfo['data']["user_name"].toString());
+    // sharedPreferences.setString(pref_user_county, userInfo['data']["user_name"].toString());
+    // sharedPreferences.setString(pref_user_city, userInfo['data']["user_name"].toString());
+    // sharedPreferences.setString(pref_user_state, userInfo['data']["user_name"].toString());
+    // sharedPreferences.setString(pref_user_nid, userInfo['data']["user_name"].toString());
+    // sharedPreferences.setString(pref_user_nid, userInfo['data']["user_name"].toString());
+  }
+
+  void removeUserInfo() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    sharedPreferences.setString(pref_user_token, "");
+    sharedPreferences.setString(pref_user_refresh_token, "");
+    sharedPreferences.setBool(pref_login_status, false);
+    sharedPreferences.setString(pref_user_Id, "");
+    sharedPreferences.setString(pref_user_email, "");
+    sharedPreferences.setString(pref_user_gender, "");
+    sharedPreferences.setString(pref_user_dob, "");
+    sharedPreferences.setString(pref_user_short_address, "");
+    sharedPreferences.setString(pref_user_image, "");
+    sharedPreferences.setString(pref_user_name, "");
+    sharedPreferences.setString(pref_user_number, "");
+    sharedPreferences.setString(pref_user_city_id, "");
+
+  }
+
+  void _showLoadingDialog(BuildContext context,String message){
     showDialog(
       context: context,
       builder: (context) {
@@ -700,7 +786,7 @@ class _LogInScreenState extends State<LogInScreen> {
                       left: 15.0, right: 15.0, top: 30, bottom: 30),
                   child: Center(
                     child: Row(
-                      children: const [
+                      children:  [
                         SizedBox(
                           width: 10,
                         ),
@@ -712,7 +798,7 @@ class _LogInScreenState extends State<LogInScreen> {
                           width: 12,
                         ),
                         Text(
-                          "Checking...",
+                          message,
                           style: TextStyle(fontSize: 25),
                         )
                       ],

@@ -5,6 +5,8 @@ String pref_login_status = "$pref_base_name.preference_login_status";
 String pref_login_firstTime = "$pref_base_name.preference_first_time";
 String pref_user_UUID = "$pref_base_name.preference_user_UUID";
 String pref_user_Id = "$pref_base_name.preference_user_Id";
+String pref_user_Is_Teacher = "$pref_base_name.preference_user_is_teacher";
+String pref_user_Is_Student = "$pref_base_name.preference_user_is_student";
 
 String pref_user_name = "$pref_base_name.preference_user_name";
 String pref_user_token = "$pref_base_name.preference_user_token";
