@@ -12,7 +12,6 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../gradiant_icon.dart';
 
 class HomeForTeacherScreen extends StatefulWidget {
   const HomeForTeacherScreen({Key? key}) : super(key: key);
@@ -30,6 +29,9 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
   TextEditingController? otpEditTextController = new TextEditingController();
   String _otpTxt = "";
   String _userId = "";
+  String _accessToken = "";
+  String _refreshToken = "";
+
   bool shimmerStatus = true;
   List teacherClassRoomList = [];
   var teacherRoomListResponse;
@@ -40,7 +42,7 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
     super.initState();
     // _getTeacherRoomDataList();
     loadUserIdFromSharePref().then((_) {
-      _getTeacherRoomDataList(_userId);
+      _getTeacherRoomDataList(_userId,_accessToken);
     });
     //loadUserIdFromSharePref();
   }
@@ -82,7 +84,7 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
                       fontWeight: FontWeight.w700),
                 ),
                     onTap: (){
-
+                      _classRoomNameController?.clear();
                       showModalBottomSheet<dynamic>(
                         backgroundColor: Colors.white,
                         isDismissible: true,
@@ -653,16 +655,19 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
     );
   }
 
-  _getTeacherRoomDataList(String u_id) async {
+  _getTeacherRoomDataList(String u_id,String accessToken) async {
     try {
       final result = await InternetAddress.lookup('example.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         shimmerStatus = true;
         try {
           var response = await get(
-            Uri.parse(
-                '$BASE_URL_API$SUB_URL_API_TEACHERS_ALL_CLASS_ROOM_LIST$u_id/'),
+            Uri.parse('$BASE_URL_API$SUB_URL_API_TEACHERS_ALL_CLASS_ROOM_LIST$u_id/'),
+            headers: {
+              "Authorization": "Token $accessToken",
+            },
           );
+          _showToast(response.statusCode.toString());
 
           if (response.statusCode == 200) {
             setState(() {
@@ -697,6 +702,9 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
         try {
           Response response = await post(
               Uri.parse('$BASE_URL_API$SUB_URL_API_TEACHERS_CLASS_ROOM_CREATE'),
+              headers: {
+                "Authorization": "Token $_accessToken",
+              },
               body: {
                 'class_room_name': roomName,
                 'user_id': u_id,
@@ -704,18 +712,24 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
           Navigator.of(context).pop();
           if (response.statusCode == 201) {
 
-            _getTeacherRoomDataList(_userId);
-            // setState(() {
-            //   _showToast("success");
-            // });
+
+            _getTeacherRoomDataList(_userId,_accessToken);
+            setState(() {
+              _showToast("success");
+            });
           }
           else if (response.statusCode == 401) {
             var data = jsonDecode(response.body.toString());
             _showToast(data['message']);
-          } else {
+          }
+          else {
             var data = jsonDecode(response.body.toString());
-            //print(data['message']);
-            _showToast(data['message']);
+            if(data['message']!=null){
+              _showToast(data['message']);
+            }
+            else{
+              _showToast("Failed try again!");
+            }
           }
         } catch (e) {
           Navigator.of(context).pop();
@@ -735,14 +749,17 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
         try {
           Response response = await put(
               Uri.parse('$BASE_URL_API$SUB_URL_API_TEACHERS_CLASS_ROOM_UPDATE$class_room_id/'),
+              headers: {
+                "Authorization": "Token $_accessToken",
+              },
               body: {
                 'class_room_name': roomName,
                 'user_id': u_id,
               });
           Navigator.of(context).pop();
           if (response.statusCode == 200) {
-
-            _getTeacherRoomDataList(_userId);
+            _classRoomNameUpdateController?.clear();
+            _getTeacherRoomDataList(_userId,_accessToken);
             // setState(() {
             //   _showToast("success");
             // });
@@ -818,18 +835,17 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
   }
 
   void updateDataAfterRefresh() {
-    _getTeacherRoomDataList(_userId);
+    _getTeacherRoomDataList(_userId,_accessToken);
     setState(() {});
   }
 
   loadUserIdFromSharePref() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
-      if (sharedPreferences.getString(pref_user_Id) != null) {
-        _userId = sharedPreferences.getString(pref_user_Id)!;
-      } else {
-        _userId = "30";
-      }
+      _userId = sharedPreferences.getString(pref_user_Id)!;
+      _accessToken = sharedPreferences.getString(pref_user_token)!;
+      _refreshToken = sharedPreferences.getString(pref_user_refresh_token)!;
+
     });
   }
 }

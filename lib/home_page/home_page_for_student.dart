@@ -7,13 +7,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class HomeForStudentScreen extends StatefulWidget {
+  const HomeForStudentScreen({Key? key}) : super(key: key);
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeForStudentScreen> createState() => _HomeForStudentScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
   TextEditingController? phoneNumberController = TextEditingController();
   TextEditingController? passwordController = TextEditingController();
   bool _isObscure = true;

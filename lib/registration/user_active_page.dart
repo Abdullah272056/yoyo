@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:aws_exam_portal/api%20service/api_service.dart';
 import 'package:aws_exam_portal/api%20service/sharePreferenceDataSaveName.dart';
-import 'package:aws_exam_portal/home_page/home_page.dart';
+import 'package:aws_exam_portal/home_page/home_page_for_student.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -264,7 +264,7 @@ class _SendUserForActiveScreenState extends State<SendUserForActiveScreen> {
             saveUserInfo(data);
 
             Navigator.pushAndRemoveUntil(context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
+                MaterialPageRoute(builder: (context) => HomeForStudentScreen()),
                   (route) => false,);
 
           } else if (response.statusCode == 400) {

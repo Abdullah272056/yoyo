@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:aws_exam_portal/api%20service/api_service.dart';
 import 'package:aws_exam_portal/api%20service/sharePreferenceDataSaveName.dart';
 import 'package:aws_exam_portal/background/background.dart';
-import 'package:aws_exam_portal/home_page/home_page.dart';
+import 'package:aws_exam_portal/home_page/home_page_for_student.dart';
 import 'package:aws_exam_portal/home_page/home_page_for_teacher.dart';
 import 'package:aws_exam_portal/registration/sign_up_page_as_teacher.dart';
 import 'package:aws_exam_portal/registration/user_active_page.dart';
@@ -555,9 +555,14 @@ class _LogInScreenState extends State<LogInScreen> {
 
              saveUserInfo(data);
 
-              Navigator.pushAndRemoveUntil(context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-                    (route) => false,);
+              if(data['data']["is_teacher"]==true){
+                Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const HomeForTeacherScreen()));
+
+              }else{
+                Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const HomeForStudentScreen()));
+
+              }
+
 
             });
           }

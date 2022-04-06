@@ -5,7 +5,8 @@ import 'dart:io';
 import 'package:aws_exam_portal/api%20service/api_service.dart';
 import 'package:aws_exam_portal/api%20service/sharePreferenceDataSaveName.dart';
 import 'package:aws_exam_portal/background/background.dart';
-import 'package:aws_exam_portal/home_page/home_page.dart';
+import 'package:aws_exam_portal/home_page/home_page_for_student.dart';
+import 'package:aws_exam_portal/home_page/home_page_for_teacher.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
@@ -379,7 +380,14 @@ class _VerificationAfterSignUpScreenState
             var data = jsonDecode(response.body.toString());
            saveUserInfo(data);
             //////////
-            Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const HomeScreen()));
+            if(data['data']["is_teacher"]==true){
+              Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const HomeForTeacherScreen()));
+
+            }else{
+              Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const HomeForStudentScreen()));
+
+            }
+
 
           } else if (response.statusCode == 400) {
             var data = jsonDecode(response.body.toString());

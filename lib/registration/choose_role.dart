@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:aws_exam_portal/background/background.dart';
-import 'package:aws_exam_portal/home_page/home_page.dart';
+import 'package:aws_exam_portal/home_page/home_page_for_student.dart';
 import 'package:aws_exam_portal/registration/sign_up_page_as_student.dart';
 import 'package:aws_exam_portal/registration/sign_up_page_as_teacher.dart';
 import 'package:flutter/material.dart';
