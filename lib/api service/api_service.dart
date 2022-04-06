@@ -17,6 +17,9 @@ String SUB_URL_API_TEACHERS_ALL_CLASS_ROOM_LIST = "classroom/";
 String SUB_URL_API_TEACHERS_CLASS_ROOM_CREATE = "classroom/";
 String SUB_URL_API_TEACHERS_CLASS_ROOM_UPDATE = "classroom/";
 
+// Class room for SUB_URL_API_STUDENT_CLASS_ROOM_JOIN
+String SUB_URL_API_STUDENT_CLASS_ROOM_JOIN = "student-join-classroom/";
+
 String SUB_URL_API = "v1/otp/";
 String SUB_URL_API_LOG_IN = "v1/user-login/";
 String SUB_URL_API_RESEND_OTP = "v1/otp-resend/";

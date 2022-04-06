@@ -1,6 +1,13 @@
 
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:aws_exam_portal/api%20service/api_service.dart';
+import 'package:aws_exam_portal/api%20service/sharePreferenceDataSaveName.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 
@@ -18,10 +25,24 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
   TextEditingController? passwordController = TextEditingController();
   bool _isObscure = true;
 
-  TextEditingController? _classRoomNameController = TextEditingController();
+  TextEditingController? _classRoomCodeController = TextEditingController();
 
   TextEditingController? otpEditTextController = new TextEditingController();
   String _otpTxt = "";
+  String _userId = "";
+  String _accessToken = "";
+  String _refreshToken = "";
+
+  @override
+  @mustCallSuper
+  initState() {
+    super.initState();
+    // _getTeacherRoomDataList();
+    loadUserIdFromSharePref().then((_) {
+     // _getTeacherRoomDataList(_userId,_accessToken);
+    });
+    //loadUserIdFromSharePref();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +76,7 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
                           fontWeight: FontWeight.w700),
                     ),
                     onTap: (){
-                      _classRoomNameController?.clear();
+                      _classRoomCodeController?.clear();
                       showModalBottomSheet<dynamic>(
                         backgroundColor: Colors.white,
                         isDismissible: true,
@@ -112,7 +133,7 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
                                           const SizedBox(
                                             height: 25,
                                           ),
-                                          _buildRoomAddButton(),
+                                          _buildRoomJoinButton(),
                                           const SizedBox(
                                             height: 15,
                                           ),
@@ -171,7 +192,7 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
 
 
 
-  Widget _buildRoomAddButton() {
+  Widget _buildRoomJoinButton() {
     return SizedBox(
       height: 50,
       width: double.infinity,
@@ -199,13 +220,13 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
           ),
         ),
         onPressed: () {
-          String classRoomNameTxt = _classRoomNameController!.text;
-          if (classRoomNameTxt.isEmpty) {
-            _showToast("Class room name can't empty!");
+          String classRoomCodeTxt = _classRoomCodeController!.text;
+          if (classRoomCodeTxt.isEmpty) {
+            _showToast("Class room code can't empty!");
             return;
           }
           Navigator.of(context).pop();
-         // _createClassRoomName(classRoomNameTxt,_userId);
+          _joinClassRoom(classRoomCodeTxt,_userId);
           //_showToast(classRoomNameTxt);
 
         },
@@ -221,7 +242,7 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
     return Container(
       color: Colors.transparent,
       child: TextField(
-        controller: _classRoomNameController,
+        controller: _classRoomCodeController,
         textInputAction: TextInputAction.next,
         cursorColor: Colors.awsCursorColor,
         cursorWidth: 1.5,
@@ -256,6 +277,62 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
     );
   }
 
+  _joinClassRoom(String roomCode,String u_id) async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        _showLoadingDialog(context,"Creating...");
+        try {
+          Response response = await post(
+              Uri.parse('$BASE_URL_API$SUB_URL_API_STUDENT_CLASS_ROOM_JOIN'),
+              headers: {
+                "Authorization": "Token $_accessToken",
+              },
+              body: {
+                'class_room_code': roomCode,
+                'student_id': u_id,
+              });
+          Navigator.of(context).pop();
+          if (response.statusCode == 200) {
+
+
+           // _getTeacherRoomDataList(_userId,_accessToken);
+            setState(() {
+              _showToast("success");
+            });
+          }
+          else if (response.statusCode == 401) {
+            var data = jsonDecode(response.body.toString());
+            _showToast(data['message']);
+          }
+          else {
+            var data = jsonDecode(response.body.toString());
+            if(data['message']!=null){
+              _showToast(data['message']);
+            }
+            else{
+              _showToast("Failed try again!");
+            }
+          }
+        } catch (e) {
+          Navigator.of(context).pop();
+          print(e.toString());
+        }
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.cancel();
+      _showToast("No Internet Connection!");
+    }
+  }
+  loadUserIdFromSharePref() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      _userId = sharedPreferences.getString(pref_user_Id)!;
+      _accessToken = sharedPreferences.getString(pref_user_token)!;
+      _refreshToken = sharedPreferences.getString(pref_user_refresh_token)!;
+
+    });
+  }
   _showToast(String message) {
     Fluttertoast.showToast(
         msg: message,
@@ -349,7 +426,7 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
   //   );
   // }
 
-  void _showLoadingDialog(BuildContext context){
+  void _showLoadingDialog(BuildContext context,String message){
     showDialog(
       context: context,
       builder: (context) {
@@ -362,7 +439,7 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
                       left: 15.0, right: 15.0, top: 30, bottom: 30),
                   child: Center(
                     child: Row(
-                      children: const [
+                      children:  [
                         SizedBox(
                           width: 10,
                         ),
@@ -374,7 +451,7 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
                           width: 12,
                         ),
                         Text(
-                          "Checking...",
+                          message,
                           style: TextStyle(fontSize: 25),
                         )
                       ],
