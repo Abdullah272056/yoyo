@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:aws_exam_portal/api%20service/NoDataFound.dart';
 import 'package:aws_exam_portal/api%20service/api_service.dart';
 import 'package:aws_exam_portal/api%20service/sharePreferenceDataSaveName.dart';
+import 'package:aws_exam_portal/class_room_details/individual_classroom_quiz_list_for_teacher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -579,7 +580,10 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
               ),
             ),
             onTap: () {
-              _showToast("Clicked Item $index");
+              Navigator.push(context,MaterialPageRoute(builder: (context)=> IndividualClassroomQuizTeacherScreen(
+                  teacherClassRoomList[index]["class_room_id"].toString(),
+                  teacherClassRoomList[index]["class_room_name"].toString())));
+              //_showToast("Clicked Item $index");
 
             },
           );
@@ -661,7 +665,6 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
               "Authorization": "Token $accessToken",
             },
           );
-          _showToast(response.statusCode.toString());
 
           if (response.statusCode == 200) {
             setState(() {

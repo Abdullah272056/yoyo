@@ -46,6 +46,11 @@ dependencies:
   #shimmer
   shimmer: ^2.0.0
 
+
+  font_awesome_flutter: ^9.2.0
+
+  hexcolor: ^2.0.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

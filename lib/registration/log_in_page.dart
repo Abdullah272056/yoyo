@@ -6,6 +6,7 @@ import 'package:aws_exam_portal/api%20service/sharePreferenceDataSaveName.dart';
 import 'package:aws_exam_portal/background/background.dart';
 import 'package:aws_exam_portal/home_page/home_page_for_student.dart';
 import 'package:aws_exam_portal/home_page/home_page_for_teacher.dart';
+import 'package:aws_exam_portal/home_page/profile/profile_page.dart';
 import 'package:aws_exam_portal/registration/sign_up_page_as_teacher.dart';
 import 'package:aws_exam_portal/registration/user_active_page.dart';
 import 'package:flutter/material.dart';
@@ -384,127 +385,6 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
 
-  // Widget _buildTextFieldOTPView({
-  //   required bool obscureText,
-  //   Widget? prefixedIcon,
-  //   String? hintText,
-  //   String? labelText,
-  // }) {
-  //   return Container(
-  //     color: Colors.transparent,
-  //     child: OTPTextField(
-  //       length: 6,
-  //       width: MediaQuery.of(context).size.width,
-  //       textFieldAlignment: MainAxisAlignment.spaceAround,
-  //       fieldStyle: FieldStyle.underline,
-  //       style: TextStyle(
-  //         fontSize: 18,
-  //         color: Colors.green,
-  //       ),
-  //       keyboardType: TextInputType.number,
-  //       onCompleted: (pin) {
-  //         _otpTxt = pin;
-  //       },
-  //       onChanged: (value) {
-  //         if (value.length < 6) {
-  //           _otpTxt = "";
-  //         }
-  //       },
-  //     ),
-  //   );
-  // }
-
-  Widget _buildVerifyButton() {
-    return SizedBox(
-      height: 50,
-      width: double.infinity,
-      child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
-            Colors.appRed,
-          ),
-          elevation: MaterialStateProperty.all(6),
-          shape: MaterialStateProperty.all(
-            const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(5),
-              ),
-            ),
-          ),
-        ),
-        child: const Text(
-          'VERIFY',
-          style: TextStyle(
-            fontFamily: 'PT-Sans',
-            fontSize: 18,
-            fontWeight: FontWeight.normal,
-            color: Colors.white,
-          ),
-        ),
-        onPressed: () {
-          String s = otpEditTextController!.text;
-          print(s);
-
-          if (_otpTxt.isNotEmpty) {
-            // _showToast(_otpTxt);
-            // Navigator.push(context,
-            //     MaterialPageRoute(builder: (context) => NavigationBarScreen(0,HomePageScreen())));
-          } else if (_otpTxt.length < 6) {
-            _showToast("Please input 6 digit Number");
-          } else {
-            _showToast("Please input valid otp");
-          }
-
-          // Navigator.push(context,MaterialPageRoute(builder: (context)=>VerificationScreen()));
-        },
-      ),
-    );
-  }
-
-  Widget _buildVerifyQuestion() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "After 240 second",
-          style: TextStyle(
-            fontFamily: 'PT-Sans',
-            fontSize: 16,
-            color: Colors.black,
-          ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        const Text(
-          "Don't get the verification code?",
-          style: TextStyle(
-            fontFamily: 'PT-Sans',
-            fontSize: 13,
-            color: Colors.black45,
-          ),
-        ),
-        const SizedBox(
-          height: 15,
-        ),
-        InkWell(
-          child: const Text(
-            'Resend Code',
-            style: TextStyle(
-              fontFamily: 'PT-Sans',
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Colors.green,
-            ),
-          ),
-          onTap: () {
-            // Navigator.push(context,MaterialPageRoute(builder: (context)=>SignUpScreen()));
-          },
-        ),
-      ],
-    );
-  }
-
   _inputValid(String phone, String password) {
     if (phone.isEmpty) {
       Fluttertoast.cancel();
@@ -549,17 +429,11 @@ class _LogInScreenState extends State<LogInScreen> {
           if (response.statusCode == 200) {
             Navigator.of(context).pop();
             setState(() {
-              Fluttertoast.cancel();
-              _showToast("success");
               var data = jsonDecode(response.body.toString());
-
              saveUserInfo(data);
-
               if(data['data']["is_teacher"]==true){
-                Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const HomeForTeacherScreen()));
-
-              }else{
-                Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const HomeForStudentScreen()));
+                Navigator.push(context,MaterialPageRoute(builder: (context)=>const HomeForTeacherScreen()));
+                //Navigator.push(context,M_         // Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const HomeForStudentScreen()));
 
               }
 
@@ -640,87 +514,6 @@ class _LogInScreenState extends State<LogInScreen> {
         fontSize: 16.0);
   }
 
-  // void _showAlertDialog(BuildContext context){
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       // return VerificationScreen();
-  //       return Dialog(
-  //         child: Wrap(
-  //           children: [
-  //             Container(
-  //               margin: const EdgeInsets.only(
-  //                   left: 15.0, right: 15.0, top: 20, bottom: 20),
-  //               child: Column(
-  //                 children: [
-  //                   Padding(
-  //                     padding: const EdgeInsets.symmetric(
-  //                       horizontal: 30,
-  //                     ),
-  //                     child: Column(
-  //                       children: [
-  //                         Image.asset(
-  //                           "assets/images/porzotok.png",
-  //                           width: 120,
-  //                           height: 65,
-  //                         )
-  //                       ],
-  //                     ),
-  //                   ),
-  //                   // Image.asset('assets/images/profile.jpg'),
-  //                   const Text(
-  //                     "let's Discover Bangladesh Together",
-  //                     style: TextStyle(
-  //                       fontFamily: 'PT-Sans',
-  //                       fontSize: 14,
-  //                       fontWeight: FontWeight.normal,
-  //                       color: Colors.black,
-  //                     ),
-  //                   ),
-  //                   // Image.asset('assets/images/profile.jpg'),
-  //                   const SizedBox(
-  //                     height: 30,
-  //                   ),
-  //                   const Text(
-  //                     "Verification code has been send to your mobile",
-  //                     style: TextStyle(
-  //                       fontFamily: 'PT-Sans',
-  //                       fontSize: 12,
-  //                       fontWeight: FontWeight.normal,
-  //                       color: Colors.black54,
-  //                     ),
-  //                   ),
-  //                   const SizedBox(
-  //                     height: 30,
-  //                   ),
-  //
-  //                   //phone number input
-  //                   _buildTextFieldOTPView(
-  //                     hintText: 'Enter 6 digit Number',
-  //                     obscureText: false,
-  //                     prefixedIcon:
-  //                         const Icon(Icons.phone, color: Colors.appRed),
-  //                   ),
-  //                   const SizedBox(
-  //                     height: 30,
-  //                   ),
-  //
-  //                   _buildVerifyButton(),
-  //
-  //                   const SizedBox(
-  //                     height: 20,
-  //                   ),
-  //                   _buildVerifyQuestion(),
-  //                 ],
-  //               ),
-  //             )
-  //           ],
-  //           // child: VerificationScreen(),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 
   void saveUserInfo(var userInfo) async {
     try {

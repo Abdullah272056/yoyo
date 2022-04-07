@@ -648,7 +648,6 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
           );
           if (response.statusCode == 200) {
             setState(() {
-              _showToast("success");
               var data = jsonDecode(response.body);
               studentJoinClassRoomList = data["data"];
               //_showToast(teacherClassRoomList.length.toString());

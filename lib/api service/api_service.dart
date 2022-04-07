@@ -1,6 +1,6 @@
 
-String BASE_URL = "http://127.0.0.1:8000/api/";
-String BASE_URL_API = "http://192.168.1.14:8000/api/";
+String BASE_URL = "http://127.0.0.1:8002/api/";
+String BASE_URL_API = "http://192.168.1.14:8002/api/";
 
 
 //registration
@@ -10,6 +10,7 @@ String SUB_URL_API_SIGN_UP_AS_TEACHER = "teacher-registration/";
 String SUB_URL_API_FORGRT_PASSWORD = "send-email-otp-for-forget-password/";
 String SUB_URL_API_RESEND_CODE = "otp-resend/";
 String SUB_URL_API_VERIFICATION_AFTER_REGISTRATION = "email-verify/";
+String SUB_URL_API_USER_PROFLE = "user-profile/";
 
 //class room
 // individual teacher all class room list
@@ -20,6 +21,8 @@ String SUB_URL_API_TEACHERS_CLASS_ROOM_UPDATE = "classroom/";
 // Class room for SUB_URL_API_STUDENT_CLASS_ROOM_JOIN
 String SUB_URL_API_STUDENT_CLASS_ROOM_JOIN = "student-join-classroom/";
 String SUB_URL_API_STUDENT_ALL_CLASS_ROOM_LIST = "student-all-join-classroom-list/";
+//Quiz test
+String SUB_URL_API_TEACHER_GET_INDIVIDUAL_CLASSROOM_QUIZ_LIST = "individual-classroom-quiz-list/";
 
 
 String SUB_URL_API = "v1/otp/";
