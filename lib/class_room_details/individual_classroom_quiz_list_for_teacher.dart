@@ -29,7 +29,7 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
   String _classRoomName;
   _IndividualClassroomQuizTeacherScreenState(this._classRoomId,this._classRoomName);
 
-  TextEditingController? _classRoomNameController = TextEditingController();
+  TextEditingController? _qiuizNameController = TextEditingController();
   TextEditingController? _classRoomNameUpdateController = TextEditingController();
   bool _isObscure = true;
 
@@ -88,7 +88,7 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
                           fontWeight: FontWeight.w700),
                     ),
                     onTap: (){
-                      _classRoomNameController?.clear();
+                      _qiuizNameController?.clear();
                       showModalBottomSheet<dynamic>(
                         backgroundColor: Colors.white,
                         isDismissible: true,
@@ -128,7 +128,7 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
                                             height: 15,
                                           ),
                                           const Text(
-                                            "Create New Class Room",
+                                            "Create New Quiz",
                                             style: TextStyle(
                                                 fontSize: 18,
                                                 color: Colors.black,
@@ -140,7 +140,7 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
 
                                           _buildTextField(
                                               obscureText: false,
-                                              labelText: "Class Room Name"),
+                                              labelText: "Quiz Name"),
 
                                           const SizedBox(
                                             height: 25,
@@ -245,7 +245,7 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
     return Container(
       color: Colors.transparent,
       child: TextField(
-        controller: _classRoomNameController,
+        controller: _qiuizNameController,
         textInputAction: TextInputAction.next,
         cursorColor: Colors.awsCursorColor,
         cursorWidth: 1.5,
@@ -301,7 +301,7 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
           ),
         ),
         child: const Text(
-          'Add',
+          'Create',
           style: TextStyle(
             fontFamily: 'PT-Sans',
             fontSize: 18,
@@ -310,13 +310,13 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
           ),
         ),
         onPressed: () {
-          String classRoomNameTxt = _classRoomNameController!.text;
-          if (classRoomNameTxt.isEmpty) {
+          String quizNameTxt = _qiuizNameController!.text;
+          if (quizNameTxt.isEmpty) {
             _showToast("Class room name can't empty!");
             return;
           }
           Navigator.of(context).pop();
-          //_createClassRoomName(classRoomNameTxt,_userId);
+          _createQuizName(quizNameTxt,_userId);
           //_showToast(classRoomNameTxt);
 
         },
@@ -326,75 +326,71 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
 
 
   Widget _buildTeacherClassRoomList() {
-    return GridView.builder(
+    return ListView.builder(
         itemCount:
         teacherIndividualClassRoomQuizList == null ? 0 : teacherIndividualClassRoomQuizList.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 2.0,
-          mainAxisSpacing: 2.0,
-        ),
+
         itemBuilder: (BuildContext context, int index) {
           return InkResponse(
             child: Card(
-              elevation: 2,
+              elevation: 1,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(7),
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(7.0),
-                child: Container(
-                  width: 160,
-                  height: 100,
-                  color: Colors.white,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Quiz Title",
-                              style: TextStyle(
-                                color: Colors.awsEndColor,
-                                fontSize: 16,
-                              ),
-                            ),
-                            SizedBox(height: 5,),
-                            Text(
-                                teacherIndividualClassRoomQuizList[index]["quiz_title"]
-                                    .toString(),
+                child: Wrap(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.all(15.0),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Quiz Title",
                                 style: TextStyle(
-                                    color: Colors.awsEndColor,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700)),
-
-                            SizedBox(height: 15,),
-
-                            Text(
-                              "Date",
-                              style: TextStyle(
-                                color: Colors.awsEndColor,
-                                fontSize: 16,
+                                  color: Colors.awsEndColor,
+                                  fontSize: 16,
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 5,),
-                            Text(
-                                teacherIndividualClassRoomQuizList[index]["date"]
-                                    .toString(),
+                              SizedBox(height: 5,),
+                              Text(
+                                  teacherIndividualClassRoomQuizList[index]["quiz_title"]
+                                      .toString(),
+                                  style: TextStyle(
+                                      color: Colors.awsEndColor,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700)),
+
+                              SizedBox(height: 15,),
+
+                              Text(
+                                "Date",
                                 style: TextStyle(
-                                    color: Colors.awsEndColor,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700))
+                                  color: Colors.awsEndColor,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              SizedBox(height: 5,),
+                              Text(
+                                  teacherIndividualClassRoomQuizList[index]["date"]
+                                      .toString(),
+                                  style: TextStyle(
+                                      color: Colors.awsEndColor,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700))
 
 
-                          ],
+                            ],
+                          ),
                         ),
                       ),
+                    ),
 
-                    ],
-                  ),
+                  ],
                 ),
               ),
             ),
@@ -406,7 +402,7 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
         });
   }
 
-  Widget _buildExploreCityListShimmer() {
+  Widget _buildExploreCityListShimmer1() {
     return Expanded(
       child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -468,6 +464,62 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
       flex: 1,
     );
   }
+  Widget _buildExploreCityListShimmer() {
+    return Expanded(
+      child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            return ListView(
+              children: [
+                SizedBox(
+                  height: constraints.maxHeight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 5, right: 5, top: 5),
+                    child: ListView.builder(
+                        itemCount: 16,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 1,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(7.0),
+                              child: Container(
+                                // width: 160,
+                                height: 140,
+                                color: Colors.white,
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: Stack(children: <Widget>[
+                                        Shimmer.fromColors(
+                                          baseColor: Colors.shimmer_baseColor,
+                                          highlightColor:
+                                          Colors.shimmer_highlightColor,
+                                          child: Container(
+                                            height: double.infinity,
+                                            width: double.infinity,
+                                            color: Colors.black.withOpacity(0.3),
+                                          ),
+                                        ),
+                                      ]),
+                                      flex: 1,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+                ),
+              ],
+            );
+          }),
+      flex: 1,
+    );
+  }
 
   _getTeacherIndividualClassroomQuizList(String class_room_id,String accessToken) async {
     try {
@@ -484,7 +536,7 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
 
           if (response.statusCode == 200) {
             setState(() {
-              _showToast("success");
+              //_showToast("success");
               var data = jsonDecode(response.body);
               teacherIndividualClassRoomQuizList = data["data"];
               //_showToast(teacherClassRoomList.length.toString());
@@ -507,53 +559,55 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
     }
   }
 
-  // _createClassRoomName(String roomName,String u_id) async {
-  //   try {
-  //     final result = await InternetAddress.lookup('example.com');
-  //     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-  //       _showLoadingDialog(context,"Creating...");
-  //       try {
-  //         Response response = await post(
-  //             Uri.parse('$BASE_URL_API$SUB_URL_API_TEACHERS_CLASS_ROOM_CREATE'),
-  //             headers: {
-  //               "Authorization": "Token $_accessToken",
-  //             },
-  //             body: {
-  //               'class_room_name': roomName,
-  //               'user_id': u_id,
-  //             });
-  //         Navigator.of(context).pop();
-  //         if (response.statusCode == 201) {
-  //
-  //
-  //           _getTeacherRoomDataList(_userId,_accessToken);
-  //           setState(() {
-  //             _showToast("success");
-  //           });
-  //         }
-  //         else if (response.statusCode == 401) {
-  //           var data = jsonDecode(response.body.toString());
-  //           _showToast(data['message']);
-  //         }
-  //         else {
-  //           var data = jsonDecode(response.body.toString());
-  //           if(data['message']!=null){
-  //             _showToast(data['message']);
-  //           }
-  //           else{
-  //             _showToast("Failed try again!");
-  //           }
-  //         }
-  //       } catch (e) {
-  //         Navigator.of(context).pop();
-  //         print(e.toString());
-  //       }
-  //     }
-  //   } on SocketException catch (_) {
-  //     Fluttertoast.cancel();
-  //     _showToast("No Internet Connection!");
-  //   }
-  // }
+  _createQuizName(String quizName,String u_id) async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        _showLoadingDialog(context,"Creating...");
+        try {
+          Response response = await post(
+              Uri.parse('$BASE_URL_API$SUB_URL_API_TEACHER_QUIZ_CREATE'),
+              headers: {
+                "Authorization": "Token $_accessToken",
+              },
+              body: {
+                'quiz_title': quizName,
+                'teacher_id': u_id,
+                'class_room_id': _classRoomId,
+
+              });
+          Navigator.of(context).pop();
+          if (response.statusCode == 201) {
+
+
+            _getTeacherIndividualClassroomQuizList(_classRoomId,_accessToken);
+            setState(() {
+              _showToast("success");
+            });
+          }
+          else if (response.statusCode == 401) {
+            var data = jsonDecode(response.body.toString());
+            _showToast(data['message']);
+          }
+          else {
+            var data = jsonDecode(response.body.toString());
+            if(data['message']!=null){
+              _showToast(data['message']);
+            }
+            else{
+              _showToast("Failed try again!");
+            }
+          }
+        } catch (e) {
+          Navigator.of(context).pop();
+          print(e.toString());
+        }
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.cancel();
+      _showToast("No Internet Connection!");
+    }
+  }
 
   void _showLoadingDialog(BuildContext context, String message) {
     showDialog(

@@ -433,7 +433,10 @@ class _LogInScreenState extends State<LogInScreen> {
              saveUserInfo(data);
               if(data['data']["is_teacher"]==true){
                 Navigator.push(context,MaterialPageRoute(builder: (context)=>const HomeForTeacherScreen()));
-                //Navigator.push(context,M_         // Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const HomeForStudentScreen()));
+
+                // Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const HomeForStudentScreen()));
+              }else{
+                Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const HomeForStudentScreen()));
 
               }
 

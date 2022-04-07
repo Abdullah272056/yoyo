@@ -98,7 +98,7 @@ class _ProfilePageScreenState extends State<ProfilePageScreen> {
                       bottom: -50.0,
                       child: CircleAvatar(
                         radius: 80,
-                        backgroundImage: AssetImage('assets/images/student.png'),
+                        backgroundImage: AssetImage('assets/images/images1.jpg'),
                       ))
                 ]),
             SizedBox(
@@ -128,8 +128,6 @@ class _ProfilePageScreenState extends State<ProfilePageScreen> {
                 ],
               ),
             ),
-
-
 
           ],
         ),

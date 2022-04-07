@@ -4,8 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'background/background.dart';
-import 'home_page/profile/profile.dart';
-import 'home_page/profile/profile_page.dart';
+
 
 void main() {
   runApp(const MyApp());

@@ -23,6 +23,7 @@ String SUB_URL_API_STUDENT_CLASS_ROOM_JOIN = "student-join-classroom/";
 String SUB_URL_API_STUDENT_ALL_CLASS_ROOM_LIST = "student-all-join-classroom-list/";
 //Quiz test
 String SUB_URL_API_TEACHER_GET_INDIVIDUAL_CLASSROOM_QUIZ_LIST = "individual-classroom-quiz-list/";
+String SUB_URL_API_TEACHER_QUIZ_CREATE = "teacher-create-quiz/";
 
 
 String SUB_URL_API = "v1/otp/";

@@ -12,6 +12,8 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
+import 'drawer_menu.dart';
+
 
 
 
@@ -55,15 +57,9 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.backGroundColor,
+        drawer: NavDrawer(),
         appBar: AppBar(
-            leading: IconButton(
-              alignment: Alignment.centerRight,
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-              onPressed: () {
-                Navigator.pop(context, true);
 
-              },
-            ),
             title: const Text(
               "Class Room List",
               textAlign: TextAlign.left,

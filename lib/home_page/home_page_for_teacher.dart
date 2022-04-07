@@ -13,6 +13,8 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
+import 'drawer_menu.dart';
+
 
 class HomeForTeacherScreen extends StatefulWidget {
   const HomeForTeacherScreen({Key? key}) : super(key: key);
@@ -37,6 +39,13 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
   List teacherClassRoomList = [];
   var teacherRoomListResponse;
 
+  var colors = [
+    Colors.lightGreen[400],
+    Colors.deepPurple[400],
+    Colors.teal[400],
+    Colors.lightBlue[400],
+  ];
+
   @override
   @mustCallSuper
   initState() {
@@ -53,14 +62,9 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.backGroundColor,
+        drawer: NavDrawer(),
         appBar: AppBar(
-            leading: IconButton(
-              alignment: Alignment.centerRight,
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-              onPressed: () {
-                Navigator.pop(context, true);
-              },
-            ),
+
             title: const Text(
               "Class Room List",
               textAlign: TextAlign.left,
@@ -398,14 +402,9 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
   }
 
   Widget _buildTeacherClassRoomList() {
-    return GridView.builder(
-        itemCount:
-            teacherClassRoomList == null ? 0 : teacherClassRoomList.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 2.0,
-          mainAxisSpacing: 2.0,
-        ),
+    return ListView.builder(
+        itemCount: teacherClassRoomList == null ? 0 : teacherClassRoomList.length,
+
         itemBuilder: (BuildContext context, int index) {
           return InkResponse(
             child: Card(
@@ -416,15 +415,60 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(7.0),
                 child: Container(
+                  padding: EdgeInsets.only(left: 15,top: 15),
                   width: 160,
-                  height: 100,
+                  height: 140,
+                 // color: colors[index % colors.length],
                   color: Colors.white,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Flex(direction: Axis.horizontal,
                         children:  [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  "Class Room Name",
+                                  style: TextStyle(
+                                    color: Colors.awsEndColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                SizedBox(height: 5,),
+                                Text(
+                                    teacherClassRoomList[index]["class_room_name"]
+                                        .toString(),
+                                    style: TextStyle(
+                                        color: Colors.awsEndColor,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700)),
 
-                          Expanded(child: SizedBox()),
+                                SizedBox(height: 15,),
+
+                                Text(
+                                  "Class Room Code",
+                                  style: TextStyle(
+                                    color: Colors.awsEndColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                SizedBox(height: 5,),
+                                Text(
+                                    teacherClassRoomList[index]["class_room_code"]
+                                        .toString(),
+                                    style: TextStyle(
+                                        color: Colors.awsEndColor,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700))
+
+
+                              ],
+                            ),
+                          ),
                           PopupMenuButton<int>(
                               itemBuilder: (BuildContext context) => <PopupMenuItem<int>>[
                                 new PopupMenuItem<int>(
@@ -530,50 +574,6 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
                         ],
                       ),
 
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Class Room Name",
-                              style: TextStyle(
-                                color: Colors.awsEndColor,
-                                fontSize: 16,
-                              ),
-                            ),
-                            SizedBox(height: 5,),
-                            Text(
-                                teacherClassRoomList[index]["class_room_name"]
-                                    .toString(),
-                                style: TextStyle(
-                                    color: Colors.awsEndColor,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700)),
-
-                            SizedBox(height: 15,),
-
-                            Text(
-                              "Class Room Code",
-                              style: TextStyle(
-                                color: Colors.awsEndColor,
-                                fontSize: 16,
-                              ),
-                            ),
-                            SizedBox(height: 5,),
-                            Text(
-                                teacherClassRoomList[index]["class_room_code"]
-                                    .toString(),
-                                style: TextStyle(
-                                    color: Colors.awsEndColor,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700))
-
-
-                          ],
-                        ),
-                      ),
-
                     ],
                   ),
                 ),
@@ -600,16 +600,9 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
               height: constraints.maxHeight,
               child: Padding(
                 padding: const EdgeInsets.only(left: 5, right: 5, top: 5),
-                child: GridView.builder(
+                child: ListView.builder(
                     itemCount: 16,
                     physics: const NeverScrollableScrollPhysics(),
-                    // physics: const AlwaysScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 0.0,
-                      mainAxisSpacing: 0.0,
-                    ),
                     itemBuilder: (BuildContext context, int index) {
                       return Card(
                         elevation: 1,
@@ -619,7 +612,8 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(7.0),
                           child: Container(
-                            width: 160,
+                           // width: 160,
+                            height: 140,
                             color: Colors.white,
                             child: Column(
                               children: [
