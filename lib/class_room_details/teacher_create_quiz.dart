@@ -275,43 +275,7 @@ class _CreateQuizTeacherScreenState extends State<CreateQuizTeacherScreen> {
           child: Flex(
             direction: Axis.vertical,
             children: [
-              // if (shimmerStatus) ...[
-              //   Expanded(
-              //       child: Flex(
-              //         direction: Axis.vertical,
-              //         children: [
-              //           SizedBox(
-              //             height: 8,
-              //           ),
-              //           _buildExploreCityListShimmer(),
-              //         ],
-              //       ))
-              // ] else ...[
-              //   if (teacherIndividualClassRoomQuizList != null &&
-              //       teacherIndividualClassRoomQuizList.length > 0) ...[
-              //     Expanded(
-              //       child: Padding(
-              //           padding: const EdgeInsets.symmetric(
-              //             horizontal: 8,
-              //           ).copyWith(top: 5, bottom: 10),
-              //           child: Column(
-              //             children: [
-              //               SizedBox(
-              //                 height: 8,
-              //               ),
-              //               Expanded(
-              //                 child: _buildTeacherClassRoomList(),
-              //                 flex: 1,
-              //               ),
-              //             ],
-              //           )),
-              //     )
-              //   ] else ...[
-              //     Expanded(
-              //       child: NoDataFound().noItemFound("Class Room Not Found!"),
-              //     ),
-              //   ],
-              // ]
+
             ],
           ),
         ),

@@ -20,7 +20,8 @@ class CreateMCQQuestionScreen extends StatefulWidget {
 }
 
 class _CreateMCQQuestionScreenState extends State<CreateMCQQuestionScreen> {
-  TextEditingController? _qiuizNameController = TextEditingController();
+  TextEditingController? _shortQuestionNameController = TextEditingController();
+  TextEditingController? _shortQuestionOptionNameController = TextEditingController();
   TextEditingController? _classRoomNameUpdateController = TextEditingController();
   bool _isObscure = true;
 
@@ -32,8 +33,12 @@ class _CreateMCQQuestionScreenState extends State<CreateMCQQuestionScreen> {
 
   bool shimmerStatus = true;
 
-  List teacherIndividualClassRoomQuizList = [];
+  List optionList = [];
+
   var teacherIndividualClassRoomQuizListResponse;
+
+  int selectedValue = -1;
+  String selectedValueText ="";
 
   @override
   @mustCallSuper
@@ -85,47 +90,99 @@ class _CreateMCQQuestionScreenState extends State<CreateMCQQuestionScreen> {
 
             //updateDataAfterRefresh();
           },
-          child: Flex(
-            direction: Axis.vertical,
-            children: [
-              // if (shimmerStatus) ...[
-              //   Expanded(
-              //       child: Flex(
-              //         direction: Axis.vertical,
-              //         children: [
-              //           SizedBox(
-              //             height: 8,
-              //           ),
-              //           _buildExploreCityListShimmer(),
-              //         ],
-              //       ))
-              // ] else ...[
-              //   if (teacherIndividualClassRoomQuizList != null &&
-              //       teacherIndividualClassRoomQuizList.length > 0) ...[
-              //     Expanded(
-              //       child: Padding(
-              //           padding: const EdgeInsets.symmetric(
-              //             horizontal: 8,
-              //           ).copyWith(top: 5, bottom: 10),
-              //           child: Column(
-              //             children: [
-              //               SizedBox(
-              //                 height: 8,
-              //               ),
-              //               Expanded(
-              //                 child: _buildTeacherClassRoomList(),
-              //                 flex: 1,
-              //               ),
-              //             ],
-              //           )),
-              //     )
-              //   ] else ...[
-              //     Expanded(
-              //       child: NoDataFound().noItemFound("Class Room Not Found!"),
-              //     ),
-              //   ],
-              // ]
-            ],
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8,
+            ).copyWith(top: 5, bottom: 10),
+            child:Flex(
+              direction: Axis.vertical,
+              children: [
+                const SizedBox(height: 20,),
+                Expanded(child:Flex(
+                   direction:Axis.vertical,
+                  children: [
+                    _buildTextField(),
+                    const SizedBox(height: 15,),
+                    _buildAddButton(),
+                    SizedBox(height: 15,),
+                    Expanded(child: StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState) {
+                          return  Padding(
+                            padding:
+                            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                            //const EdgeInsets.only(left: 15, top: 5, right: 10, bottom: 10),
+                            child:SingleChildScrollView(
+                              child: Padding(
+                                padding:
+                                const EdgeInsets.only(left: 15, top: 5, right: 10, bottom: 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+
+                                    Container(
+                                      color: Colors.transparent,
+                                      child: Theme(
+                                        data: Theme.of(context).copyWith(
+                                          unselectedWidgetColor: Colors.appRed,
+                                        ),
+                                        child: Column(
+                                          children: [
+
+                                            ListView.builder(
+                                              itemCount: optionList == null ? 0 : optionList.length,
+                                              shrinkWrap: true,
+                                              physics: const NeverScrollableScrollPhysics(),
+                                              itemBuilder: (context, index) {
+                                                return RadioListTile<int>(
+                                                    value: index,
+                                                    activeColor: Colors.appRed,
+                                                    title: Text(
+                                                      optionList[index].toString(),
+                                                      style: TextStyle(fontSize: 16),
+                                                    ),
+                                                    groupValue: selectedValue,
+                                                    onChanged: (value) => setState(() {
+                                                      selectedValue = index;
+                                                      selectedValueText="Cox's Bazar";
+                                                    })
+                                                );
+                                              },
+                                            ),
+
+
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+
+
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                          ;
+                        }),)
+
+                  ],
+                )),
+
+                _buildSaveButton(),
+                const SizedBox(height: 15,),
+
+
+              ],
+            ),
+
           ),
         ),
       ),
@@ -133,377 +190,153 @@ class _CreateMCQQuestionScreenState extends State<CreateMCQQuestionScreen> {
   }
 
   Widget _buildTextField({
-    required bool obscureText,
-    // Widget? prefixedIcon,
     String? hintText,
     String? labelText,
   }) {
-    return Container(
-      color: Colors.transparent,
-      child: TextField(
-        controller: _qiuizNameController,
-        textInputAction: TextInputAction.next,
-        cursorColor: Colors.awsCursorColor,
-        cursorWidth: 1.5,
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 18,
-        ),
-        decoration: InputDecoration(
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-          labelText: labelText,
-          labelStyle: TextStyle(
-            color: Colors.hint_color,
+    return TextFormField(
+      controller: _shortQuestionNameController,
+      minLines: 4,
+      maxLines: null,
+      keyboardType: TextInputType.multiline,
+      decoration: InputDecoration(
+          hintText: 'Enter your question',
+          hintStyle: TextStyle(
+              color: Colors.grey
           ),
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: const EdgeInsets.all(15),
-          // prefixIcon: prefixedIcon,
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.awsEndColor, width: 1),
-          ),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.awsStartColor, width: .2),
-          ),
-          hintText: hintText,
-          hintStyle: const TextStyle(
-            color: Colors.hint_color,
-            fontWeight: FontWeight.normal,
-            fontFamily: 'PTSans',
-          ),
-        ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          )
       ),
     );
   }
 
-
-
-  Widget _buildRoomAddButton() {
-    return SizedBox(
-      height: 50,
-      width: double.infinity,
-      child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
-            Colors.awsMixedColor,
+  Widget _buildOptionTextField({
+    String? hintText,
+    String? labelText,
+  }) {
+    return TextFormField(
+      controller: _shortQuestionOptionNameController,
+      minLines: 2,
+      maxLines: null,
+      keyboardType: TextInputType.multiline,
+      decoration: InputDecoration(
+          hintText: 'Enter option',
+          hintStyle: TextStyle(
+              color: Colors.grey
           ),
-          elevation: MaterialStateProperty.all(6),
-          shape: MaterialStateProperty.all(
-            const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(5),
-              ),
-            ),
-          ),
-        ),
-        child: const Text(
-          'Create',
-          style: TextStyle(
-            fontFamily: 'PT-Sans',
-            fontSize: 18,
-            fontWeight: FontWeight.normal,
-            color: Colors.white,
-          ),
-        ),
-        onPressed: () {
-          String quizNameTxt = _qiuizNameController!.text;
-          if (quizNameTxt.isEmpty) {
-            _showToast("Class room name can't empty!");
-            return;
-          }
-          Navigator.of(context).pop();
-          //_createQuizName(quizNameTxt,_userId);
-          //_showToast(classRoomNameTxt);
-
-        },
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+          )
       ),
     );
   }
 
+  Widget _buildSaveButton() {
+    return ElevatedButton(
+      onPressed: () {
 
-  Widget _buildTeacherClassRoomList() {
-    return ListView.builder(
-        itemCount:
-        teacherIndividualClassRoomQuizList == null ? 0 : teacherIndividualClassRoomQuizList.length,
+        String shortQuestionTxt = _shortQuestionNameController!.text;
 
-        itemBuilder: (BuildContext context, int index) {
-          return InkResponse(
-            child: Card(
-              elevation: 1,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(7),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(7.0),
-                child: Wrap(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        padding: EdgeInsets.all(15.0),
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Quiz Title",
-                                style: TextStyle(
-                                  color: Colors.awsEndColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              SizedBox(height: 5,),
-                              Text(
-                                  teacherIndividualClassRoomQuizList[index]["quiz_title"]
-                                      .toString(),
-                                  style: TextStyle(
-                                      color: Colors.awsEndColor,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700)),
-
-                              SizedBox(height: 15,),
-
-                              Text(
-                                "Date",
-                                style: TextStyle(
-                                  color: Colors.awsEndColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              SizedBox(height: 5,),
-                              Text(
-                                  teacherIndividualClassRoomQuizList[index]["date"]
-                                      .toString(),
-                                  style: TextStyle(
-                                      color: Colors.awsEndColor,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700))
-
-
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-
-                  ],
-                ),
-              ),
-            ),
-            onTap: () {
-              //  _showToast("Clicked Item $index");
-
-            },
-          );
-        });
-  }
-
-  Widget _buildExploreCityListShimmer1() {
-    return Expanded(
-      child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            return ListView(
-              children: [
-                SizedBox(
-                  height: constraints.maxHeight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 5, right: 5, top: 5),
-                    child: GridView.builder(
-                        itemCount: 16,
-                        physics: const NeverScrollableScrollPhysics(),
-                        // physics: const AlwaysScrollableScrollPhysics(),
-                        gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 0.0,
-                          mainAxisSpacing: 0.0,
-                        ),
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            elevation: 1,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(7),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(7.0),
-                              child: Container(
-                                width: 160,
-                                color: Colors.white,
-                                child: Column(
-                                  children: [
-                                    Expanded(
-                                      child: Stack(children: <Widget>[
-                                        Shimmer.fromColors(
-                                          baseColor: Colors.shimmer_baseColor,
-                                          highlightColor:
-                                          Colors.shimmer_highlightColor,
-                                          child: Container(
-                                            height: double.infinity,
-                                            width: double.infinity,
-                                            color: Colors.black.withOpacity(0.3),
-                                          ),
-                                        ),
-                                      ]),
-                                      flex: 1,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
-                  ),
-                ),
-              ],
-            );
-          }),
-      flex: 1,
-    );
-  }
-  Widget _buildExploreCityListShimmer() {
-    return Expanded(
-      child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            return ListView(
-              children: [
-                SizedBox(
-                  height: constraints.maxHeight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 5, right: 5, top: 5),
-                    child: ListView.builder(
-                        itemCount: 16,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            elevation: 1,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(7),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(7.0),
-                              child: Container(
-                                // width: 160,
-                                height: 140,
-                                color: Colors.white,
-                                child: Column(
-                                  children: [
-                                    Expanded(
-                                      child: Stack(children: <Widget>[
-                                        Shimmer.fromColors(
-                                          baseColor: Colors.shimmer_baseColor,
-                                          highlightColor:
-                                          Colors.shimmer_highlightColor,
-                                          child: Container(
-                                            height: double.infinity,
-                                            width: double.infinity,
-                                            color: Colors.black.withOpacity(0.3),
-                                          ),
-                                        ),
-                                      ]),
-                                      flex: 1,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
-                  ),
-                ),
-              ],
-            );
-          }),
-      flex: 1,
-    );
-  }
-
-  _getTeacherIndividualClassroomQuizList(String class_room_id,String accessToken) async {
-    try {
-      final result = await InternetAddress.lookup('example.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        shimmerStatus = true;
-        try {
-          var response = await get(
-            Uri.parse('$BASE_URL_API$SUB_URL_API_TEACHER_GET_INDIVIDUAL_CLASSROOM_QUIZ_LIST$class_room_id/'),
-            headers: {
-              "Authorization": "Token $accessToken",
-            },
-          );
-
-          if (response.statusCode == 200) {
-            setState(() {
-              //_showToast("success");
-              var data = jsonDecode(response.body);
-              teacherIndividualClassRoomQuizList = data["data"];
-              //_showToast(teacherClassRoomList.length.toString());
-              shimmerStatus = false;
-            });
-          }
-          else {
-            Fluttertoast.cancel();
-            //_showToast("Failed");
-          }
-        } catch (e) {
+        if (shortQuestionTxt.isEmpty) {
           Fluttertoast.cancel();
-          print(e.toString());
-          //_showToast("Failed");
+          _showToast("question can't empty");
+          return;
         }
-      }
-    } on SocketException catch (e) {
-      Fluttertoast.cancel();
-      _showToast("No Internet Connection!");
-    }
+
+        //_createShortQuestion(shortQuestionTxt);
+        ///////////
+      },
+      style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.zero,
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(7))),
+      child: Ink(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.awsStartColor, Colors.awsEndColor],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+            borderRadius: BorderRadius.circular(7.0)),
+        child: Container(
+          height: 50,
+          alignment: Alignment.center,
+          child: Text(
+            "Save",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'PT-Sans',
+              fontSize: 18,
+              fontWeight: FontWeight.normal,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
-  // _createQuizName(String quizName,String u_id) async {
-  //   try {
-  //     final result = await InternetAddress.lookup('example.com');
-  //     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-  //       _showLoadingDialog(context,"Creating...");
-  //       try {
-  //         Response response = await post(
-  //             Uri.parse('$BASE_URL_API$SUB_URL_API_TEACHER_QUIZ_CREATE'),
-  //             headers: {
-  //               "Authorization": "Token $_accessToken",
-  //             },
-  //             body: {
-  //               'quiz_title': quizName,
-  //               'teacher_id': u_id,
-  //               'class_room_id': _classRoomId,
-  //
-  //             });
-  //         Navigator.of(context).pop();
-  //         if (response.statusCode == 201) {
-  //
-  //
-  //           _getTeacherIndividualClassroomQuizList(_classRoomId,_accessToken);
-  //           setState(() {
-  //             _showToast("success");
-  //           });
-  //         }
-  //         else if (response.statusCode == 401) {
-  //           var data = jsonDecode(response.body.toString());
-  //           _showToast(data['message']);
-  //         }
-  //         else {
-  //           var data = jsonDecode(response.body.toString());
-  //           if(data['message']!=null){
-  //             _showToast(data['message']);
-  //           }
-  //           else{
-  //             _showToast("Failed try again!");
-  //           }
-  //         }
-  //       } catch (e) {
-  //         Navigator.of(context).pop();
-  //         print(e.toString());
-  //       }
-  //     }
-  //   } on SocketException catch (_) {
-  //     Fluttertoast.cancel();
-  //     _showToast("No Internet Connection!");
-  //   }
-  // }
+  Widget _buildAddButton() {
+    return  Flex(direction: Axis.horizontal,
+      children: [
+        Expanded(child: _buildOptionTextField(),),
+        SizedBox(width: 10,),
+        InkResponse(
+          child: Ink(
+
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.awsMixedColor, Colors.awsMixedColor],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                borderRadius: BorderRadius.circular(7.0)),
+            child: Container(
+              height: 50,
+              padding: EdgeInsets.only(left: 15,right: 15),
+              alignment: Alignment.center,
+              child: Text(
+                "Add",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'PT-Sans',
+                  fontSize: 15,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          onTap: (){
+            if(optionList.length<6){
+              String optionTxt = _shortQuestionOptionNameController!.text;
+
+              if (optionTxt.isEmpty) {
+                Fluttertoast.cancel();
+                _showToast("Option can't empty");
+                return;
+              }
+              optionList.add(optionTxt);
+              _shortQuestionOptionNameController?.clear();
+
+            }
+            else{
+
+            }
+
+            setState(() {
+
+            });
+          },
+        ),
+        SizedBox(width: 10,),
+      ],
+    );
+  }
+
+
+
+
 
   void _showLoadingDialog(BuildContext context, String message) {
     showDialog(
@@ -557,10 +390,6 @@ class _CreateMCQQuestionScreenState extends State<CreateMCQQuestionScreen> {
         fontSize: 16.0);
   }
 
-  // void updateDataAfterRefresh() {
-  //   _getTeacherIndividualClassroomQuizList(_classRoomId,_accessToken);
-  //   setState(() {});
-  // }
 
   loadUserIdFromSharePref() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
