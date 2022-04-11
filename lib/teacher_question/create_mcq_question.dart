@@ -55,15 +55,18 @@ class _CreateMCQQuestionScreenState extends State<CreateMCQQuestionScreen> {
   String correct_answer_array="";
   String answer_option="";
 
+
+
+
   @override
   @mustCallSuper
   initState() {
     super.initState();
-    // _getTeacherRoomDataList();
+
     loadUserIdFromSharePref().then((_) {
-      // _getTeacherIndividualClassroomQuizList(_classRoomId,_accessToken);
+      //_getAllQuestionList(_accessToken);
     });
-    //loadUserIdFromSharePref();
+
   }
 
   @override
@@ -442,6 +445,7 @@ class _CreateMCQQuestionScreenState extends State<CreateMCQQuestionScreen> {
       _showToast("No Internet Connection!");
     }
   }
+
 
 
 

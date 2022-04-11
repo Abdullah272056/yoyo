@@ -28,3 +28,4 @@ String SUB_URL_API_TEACHER_QUIZ_CREATE = "teacher-create-quiz/";
 //question create
 String SUB_URL_API_CREATE_SHORT_QUESTION = "create-short-question/";
 String SUB_URL_API_CREATE_MCQ_QUESTION = "create-mcq-question/";
+String SUB_URL_API_QUESTION_LIST = "all-question-list/2/";
