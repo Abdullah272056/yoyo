@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:aws_exam_portal/api%20service/NoDataFound.dart';
 import 'package:aws_exam_portal/api%20service/api_service.dart';
 import 'package:aws_exam_portal/api%20service/sharePreferenceDataSaveName.dart';
+import 'package:aws_exam_portal/class_room_details/teacher_create_quiz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,12 +15,23 @@ import 'package:shimmer/shimmer.dart';
 
 
 class CreateMCQQuestionScreen extends StatefulWidget {
+  String quiz_id;
+  String classRoomName;
+
+
+  CreateMCQQuestionScreen(this.quiz_id, this.classRoomName);
 
   @override
-  State<CreateMCQQuestionScreen> createState() => _CreateMCQQuestionScreenState();
+  State<CreateMCQQuestionScreen> createState() => _CreateMCQQuestionScreenState(this.quiz_id,this.classRoomName);
 }
 
 class _CreateMCQQuestionScreenState extends State<CreateMCQQuestionScreen> {
+  String _quiz_id;
+  String _classRoomName;
+
+
+  _CreateMCQQuestionScreenState(this._quiz_id, this._classRoomName);
+
   TextEditingController? _shortQuestionNameController = TextEditingController();
   TextEditingController? _shortQuestionOptionNameController = TextEditingController();
   TextEditingController? _classRoomNameUpdateController = TextEditingController();
@@ -39,6 +51,9 @@ class _CreateMCQQuestionScreenState extends State<CreateMCQQuestionScreen> {
 
   int selectedValue = -1;
   String selectedValueText ="";
+
+  String correct_answer_array="";
+  String answer_option="";
 
   @override
   @mustCallSuper
@@ -243,8 +258,52 @@ class _CreateMCQQuestionScreenState extends State<CreateMCQQuestionScreen> {
           return;
         }
 
-        //_createShortQuestion(shortQuestionTxt);
-        ///////////
+        answer_option="";
+        if(optionList.length>=2){
+          for(int i=0; i<optionList.length; i++){
+            if(answer_option==null|| answer_option.isEmpty){
+              answer_option=optionList[i];
+            }else{
+              answer_option=answer_option+","+optionList[i];
+            }
+
+          }
+        }else{
+          _showToast("Add option");
+          return;
+        }
+        correct_answer_array="";
+        if(selectedValue==-1){
+          _showToast(" please select answer");
+          return;
+        }
+        else{
+          for(int i=0; i<optionList.length; i++){
+            if(correct_answer_array==null|| correct_answer_array.isEmpty){
+
+              if(selectedValue==i){
+                correct_answer_array="1";
+              }
+              else{
+                correct_answer_array="0";
+              }
+
+            }else{
+              if(selectedValue==i){
+                correct_answer_array=correct_answer_array+","+"1";
+              }
+              else{
+                correct_answer_array=correct_answer_array+","+"0";
+        }
+
+            }
+          }
+        }
+
+
+
+       _createMCQQuestion(shortQuestionTxt,answer_option,correct_answer_array);
+
       },
       style: ElevatedButton.styleFrom(
           padding: EdgeInsets.zero,
@@ -335,6 +394,54 @@ class _CreateMCQQuestionScreenState extends State<CreateMCQQuestionScreen> {
   }
 
 
+  _createMCQQuestion(String question, option,answerSelected ) async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        print('connected');
+        _showLoadingDialog(context,"Checking...");
+        try {
+          Response response = await post(
+              Uri.parse('$BASE_URL_API$SUB_URL_API_CREATE_MCQ_QUESTION'),
+              headers: {
+                "Authorization": "Token $_accessToken",
+              },
+              body: {'question_name': question,
+                "is_mcq_questions":"true",
+                'teacher_id':_userId,
+                'quiz_id':_quiz_id,
+                'mcq_option_answer':option,
+                'is_correct_answer':answerSelected
+
+              });
+
+          if (response.statusCode == 201){
+
+            Navigator.of(context).pop();
+            _showToast("Success");
+            Navigator.push(context,MaterialPageRoute(builder: (context)=> CreateQuizTeacherScreen(_quiz_id,_classRoomName)));
+
+            var data = jsonDecode(response.body);
+
+          }
+          else {
+            Navigator.of(context).pop();
+            var data = jsonDecode(response.body.toString());
+            Fluttertoast.cancel();
+            _showToast(data['message'].toString());
+          }
+        } catch (e) {
+          Navigator.of(context).pop();
+          Fluttertoast.cancel();
+          print(e.toString());
+          _showToast("failed১");
+        }
+      }
+    } on SocketException catch (e) {
+      Fluttertoast.cancel();
+      _showToast("No Internet Connection!");
+    }
+  }
 
 
 

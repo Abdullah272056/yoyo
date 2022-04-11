@@ -1,6 +1,6 @@
 
 String BASE_URL = "http://127.0.0.1:8002/api/";
-String BASE_URL_API = "http://192.168.1.12:8002/api/";
+String BASE_URL_API = "http://192.168.1.12:8000/api/";
 
 //registration
 String SUB_URL_API_SIGN_IN = "user-login/";
@@ -27,6 +27,4 @@ String SUB_URL_API_TEACHER_QUIZ_CREATE = "teacher-create-quiz/";
 
 //question create
 String SUB_URL_API_CREATE_SHORT_QUESTION = "create-short-question/";
-
-
-
+String SUB_URL_API_CREATE_MCQ_QUESTION = "create-mcq-question/";

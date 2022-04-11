@@ -125,7 +125,7 @@ class _CreateQuizTeacherScreenState extends State<CreateQuizTeacherScreen> {
                                         InkResponse(
                                           onTap: () {
                                             Navigator.of(context).pop();
-                                            Navigator.push(context,MaterialPageRoute(builder: (context)=> CreateMCQQuestionScreen()));
+                                            Navigator.push(context,MaterialPageRoute(builder: (context)=> CreateMCQQuestionScreen(_quizId,_classRoomName)));
                                           },
                                           child: const Center(
                                             child: Text(
