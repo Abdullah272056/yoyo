@@ -424,60 +424,59 @@ class _CreateQuizTeacherScreenState extends State<CreateQuizTeacherScreen> {
                 borderRadius: BorderRadius.circular(7.0),
                 child: Wrap(
                   children: [
-                    Expanded(
-                      child: Container(
-                        padding: EdgeInsets.all(15.0),
-                        child: Column(
+                    Container(
 
-                          children: [
-                            Flex(direction: Axis.horizontal,
-                             children: [
-                               Text((index+1).toString()+". "+ questionList[index]["question_name"].toString(),
-                                   style: TextStyle(
-                                       color: Colors.awsEndColor,
-                                       fontSize: 20,
-                                       fontWeight: FontWeight.w700)),
-                             ],
-                            ),
+                      padding: EdgeInsets.all(15.0),
+                      child: Column(
 
-
-
-                            if(questionList[index]["is_mcq_questions"])...[
-                              for(int i=0; i<questionList[index]["questions_options"].length;i++)...{
-                                SizedBox(height: 4,),
-                                if(questionList[index]["questions_options"][i]["is_correct_answer"])...[
-                                  Flex(direction: Axis.horizontal,children: [
-                                    Icon(
-                                      Icons.verified_user,
-                                      color: Colors.green,
-                                      size: 20.0,
-                                    ),
-                                    SizedBox(width: 10,),
-                                    Text(questionList[index]["questions_options"][i]["mcq_option_answer"].toString())
-                                  ],)
-
-                                ]
-                                else...[
-                                  Flex(direction: Axis.horizontal,children: [
-                                    Icon(
-                                      Icons.cancel,
-                                      color: Colors.deepOrange,
-                                      size: 20.0,
-                                    ),
-                                    SizedBox(width: 10,),
-                                    Text(questionList[index]["questions_options"][i]["mcq_option_answer"].toString())
-                                  ],)
-                                ]
-
-                              }
-
-                              
-                            ]
+                        children: [
+                          Flex(direction: Axis.horizontal,
+                            children: [
+                              Text((index+1).toString()+". "+ questionList[index]["question_name"].toString(),
+                                  style: TextStyle(
+                                      color: Colors.awsEndColor,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700)),
+                            ],
+                          ),
 
 
 
-                          ],
-                        ),
+                          if(questionList[index]["is_mcq_questions"])...[
+                            for(int i=0; i<questionList[index]["questions_options"].length;i++)...{
+                              SizedBox(height: 4,),
+                              if(questionList[index]["questions_options"][i]["is_correct_answer"])...[
+                                Flex(direction: Axis.horizontal,children: [
+                                  Icon(
+                                    Icons.verified_user,
+                                    color: Colors.green,
+                                    size: 20.0,
+                                  ),
+                                  SizedBox(width: 10,),
+                                  Text(questionList[index]["questions_options"][i]["mcq_option_answer"].toString())
+                                ],)
+
+                              ]
+                              else...[
+                                Flex(direction: Axis.horizontal,children: [
+                                  Icon(
+                                    Icons.cancel,
+                                    color: Colors.deepOrange,
+                                    size: 20.0,
+                                  ),
+                                  SizedBox(width: 10,),
+                                  Text(questionList[index]["questions_options"][i]["mcq_option_answer"].toString())
+                                ],)
+                              ]
+
+                            }
+
+
+                          ]
+
+
+
+                        ],
                       ),
                     ),
 
