@@ -566,7 +566,8 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
                                   );
                                 }
                                 if(value==3){
-                                  _showToast("Delete");
+                                  //_showToast("Delete");
+                                  _deleteClassRoomName(teacherClassRoomList[index]["class_room_id"].toString());
                                 }
 
                               }),
@@ -754,6 +755,45 @@ class _HomeForTeacherScreenState extends State<HomeForTeacherScreen> {
             // setState(() {
             //   _showToast("success");
             // });
+          }
+          else if (response.statusCode == 401) {
+            var data = jsonDecode(response.body.toString());
+            _showToast(data['message']);
+          } else {
+            var data = jsonDecode(response.body.toString());
+            //print(data['message']);
+            _showToast(data['message']);
+          }
+        } catch (e) {
+          Navigator.of(context).pop();
+          print(e.toString());
+        }
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.cancel();
+      _showToast("No Internet Connection!");
+    }
+  }
+  _deleteClassRoomName(String class_room_id) async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        _showLoadingDialog(context,"Creating...");
+        try {
+          Response response = await delete(
+              Uri.parse('$BASE_URL_API$SUB_URL_API_TEACHERS_CLASS_ROOM_DELETE$class_room_id/'),
+              headers: {
+                "Authorization": "Token $_accessToken",
+              },
+          );
+          Navigator.of(context).pop();
+          if (response.statusCode == 200) {
+            _classRoomNameUpdateController?.clear();
+            _getTeacherRoomDataList(_userId,_accessToken);
+
+            setState(() {
+              _showToast("successfully deleted");
+            });
           }
           else if (response.statusCode == 401) {
             var data = jsonDecode(response.body.toString());

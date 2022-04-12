@@ -1,6 +1,6 @@
 
 String BASE_URL = "http://127.0.0.1:8002/api/";
-String BASE_URL_API = "http://192.168.1.12:8000/api/";
+String BASE_URL_API = "http://192.168.1.12:8002/api/";
 
 //registration
 String SUB_URL_API_SIGN_IN = "user-login/";
@@ -16,6 +16,7 @@ String SUB_URL_API_USER_PROFLE = "user-profile/";
 String SUB_URL_API_TEACHERS_ALL_CLASS_ROOM_LIST = "classroom/";
 String SUB_URL_API_TEACHERS_CLASS_ROOM_CREATE = "classroom/";
 String SUB_URL_API_TEACHERS_CLASS_ROOM_UPDATE = "classroom/";
+String SUB_URL_API_TEACHERS_CLASS_ROOM_DELETE = "classroom/";
 
 // Class room for SUB_URL_API_STUDENT_CLASS_ROOM_JOIN
 String SUB_URL_API_STUDENT_CLASS_ROOM_JOIN = "student-join-classroom/";
@@ -28,4 +29,4 @@ String SUB_URL_API_TEACHER_QUIZ_CREATE = "teacher-create-quiz/";
 //question create
 String SUB_URL_API_CREATE_SHORT_QUESTION = "create-short-question/";
 String SUB_URL_API_CREATE_MCQ_QUESTION = "create-mcq-question/";
-String SUB_URL_API_QUESTION_LIST = "all-question-list/2/";
+String SUB_URL_API_QUESTION_LIST = "all-question-list/";

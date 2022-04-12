@@ -621,7 +621,7 @@ class _CreateQuizTeacherScreenState extends State<CreateQuizTeacherScreen> {
         shimmerStatus = true;
         try {
           var response = await get(
-            Uri.parse('$BASE_URL_API$SUB_URL_API_QUESTION_LIST'),
+            Uri.parse('$BASE_URL_API$SUB_URL_API_QUESTION_LIST$_quizId/'),
             headers: {
               "Authorization": "Token $accessToken",
             },

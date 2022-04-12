@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:aws_exam_portal/api%20service/NoDataFound.dart';
 import 'package:aws_exam_portal/api%20service/api_service.dart';
 import 'package:aws_exam_portal/api%20service/sharePreferenceDataSaveName.dart';
-import 'package:aws_exam_portal/class_room_details/teacher_create_quiz.dart';
+import 'package:aws_exam_portal/class_room_details/teacher_question.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
