@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:aws_exam_portal/api%20service/NoDataFound.dart';
 import 'package:aws_exam_portal/api%20service/api_service.dart';
 import 'package:aws_exam_portal/api%20service/sharePreferenceDataSaveName.dart';
+import 'package:aws_exam_portal/exam/individual_classroom_quiz_list_for_student.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -473,6 +474,9 @@ class _HomeForStudentScreenState extends State<HomeForStudentScreen> {
             ),
             onTap: () {
               _showToast("Clicked Item $index");
+              Navigator.push(context,MaterialPageRoute(builder: (context)=> IndividualClassroomQuizStudentScreen(
+                  studentJoinClassRoomList[index]["class_room_id"].toString(),
+                  studentJoinClassRoomList[index]["classroom_info"]["class_room_name"].toString())));
 
             },
           );

@@ -15,21 +15,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 
-class IndividualClassroomQuizTeacherScreen extends StatefulWidget {
+class IndividualClassroomQuizStudentScreen extends StatefulWidget {
   String classRoomId;
   String classRoomName;
 
 
-  IndividualClassroomQuizTeacherScreen(this.classRoomId,this.classRoomName);
+  IndividualClassroomQuizStudentScreen(this.classRoomId,this.classRoomName);
 
   @override
-  State<IndividualClassroomQuizTeacherScreen> createState() => _IndividualClassroomQuizTeacherScreenState(this.classRoomId,this.classRoomName);
+  State<IndividualClassroomQuizStudentScreen> createState() => _IndividualClassroomQuizStudentScreenState(this.classRoomId,this.classRoomName);
 }
 
-class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassroomQuizTeacherScreen> {
+class _IndividualClassroomQuizStudentScreenState extends State<IndividualClassroomQuizStudentScreen> {
   String _classRoomId;
   String _classRoomName;
-  _IndividualClassroomQuizTeacherScreenState(this._classRoomId,this._classRoomName);
+  _IndividualClassroomQuizStudentScreenState(this._classRoomId,this._classRoomName);
 
   TextEditingController? _qiuizNameController = TextEditingController();
   TextEditingController? _classRoomNameUpdateController = TextEditingController();
@@ -88,102 +88,7 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
                 fontWeight: FontWeight.normal,
               ),
             ),
-            actions: [
-              Center(
-                  child: InkResponse(
-                    child: const Text(
 
-                      "Create\nQuiz",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700),
-                    ),
-                    onTap: (){
-                      _qiuizNameController?.clear();
-                      showModalBottomSheet<dynamic>(
-                        backgroundColor: Colors.white,
-                        isDismissible: true,
-                        context: context,
-
-                        isScrollControlled: true,
-                        builder: (BuildContext context) {
-
-                          return StatefulBuilder(
-                              builder: (BuildContext context, StateSetter setState) {
-                                return  Padding(
-                                  padding:
-                                  EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                                  //const EdgeInsets.only(left: 15, top: 5, right: 10, bottom: 10),
-                                  child:SingleChildScrollView(
-                                    child: Padding(
-                                      padding:
-                                      const EdgeInsets.only(left: 15, top: 5, right: 10, bottom: 10),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          Center(
-                                            // child: Icon(Icons.arrow_drop_down_sharp,size: 40,),
-                                            child: InkWell(
-                                              child: Image.asset(
-                                                "assets/images/drop_down.png",
-                                                width: 40,
-                                                height: 20,
-                                              ),
-                                              onTap: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 15,
-                                          ),
-                                          const Text(
-                                            "Create New Quiz",
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          const SizedBox(
-                                            height: 25,
-                                          ),
-
-                                          _buildTextField(
-                                              obscureText: false,
-                                              labelText: "Quiz Name"),
-
-                                          const SizedBox(
-                                            height: 25,
-                                          ),
-                                          _buildRoomAddButton(),
-                                          const SizedBox(
-                                            height: 15,
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                )
-                                ;
-                              });
-                        },
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(25.0),
-                              topRight: Radius.circular(25.0)),
-                        ),
-                      );
-
-                    },
-                  )),
-              const SizedBox(
-                width: 20,
-              )
-            ],
             flexibleSpace: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -344,94 +249,6 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
           ),
         ),
 
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required bool obscureText,
-    // Widget? prefixedIcon,
-    String? hintText,
-    String? labelText,
-  }) {
-    return Container(
-      color: Colors.transparent,
-      child: TextField(
-        controller: _qiuizNameController,
-        textInputAction: TextInputAction.next,
-        cursorColor: Colors.awsCursorColor,
-        cursorWidth: 1.5,
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 18,
-        ),
-        decoration: InputDecoration(
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-          labelText: labelText,
-          labelStyle: TextStyle(
-            color: Colors.hint_color,
-          ),
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: const EdgeInsets.all(15),
-          // prefixIcon: prefixedIcon,
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.awsEndColor, width: 1),
-          ),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.awsStartColor, width: .2),
-          ),
-          hintText: hintText,
-          hintStyle: const TextStyle(
-            color: Colors.hint_color,
-            fontWeight: FontWeight.normal,
-            fontFamily: 'PTSans',
-          ),
-        ),
-      ),
-    );
-  }
-
-
-
-  Widget _buildRoomAddButton() {
-    return SizedBox(
-      height: 50,
-      width: double.infinity,
-      child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
-            Colors.awsMixedColor,
-          ),
-          elevation: MaterialStateProperty.all(6),
-          shape: MaterialStateProperty.all(
-            const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(5),
-              ),
-            ),
-          ),
-        ),
-        child: const Text(
-          'Create',
-          style: TextStyle(
-            fontFamily: 'PT-Sans',
-            fontSize: 18,
-            fontWeight: FontWeight.normal,
-            color: Colors.white,
-          ),
-        ),
-        onPressed: () {
-          String quizNameTxt = _qiuizNameController!.text;
-          if (quizNameTxt.isEmpty) {
-            _showToast("Class room name can't empty!");
-            return;
-          }
-          Navigator.of(context).pop();
-          _createQuizName(quizNameTxt,_userId);
-          //_showToast(classRoomNameTxt);
-
-        },
       ),
     );
   }
@@ -716,96 +533,7 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
     }
   }
 
-  _createQuizName(String quizName,String u_id) async {
-    try {
-      final result = await InternetAddress.lookup('example.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        _showLoadingDialog(context,"Creating...");
-        try {
-          Response response = await post(
-              Uri.parse('$BASE_URL_API$SUB_URL_API_TEACHER_QUIZ_CREATE'),
-              headers: {
-                "Authorization": "Token $_accessToken",
-              },
-              body: {
-                'quiz_title': quizName,
-                'teacher_id': u_id,
-                'class_room_id': _classRoomId,
 
-              });
-          Navigator.of(context).pop();
-          if (response.statusCode == 201) {
-
-
-            _getTeacherIndividualClassroomQuizList(_classRoomId,_accessToken);
-            setState(() {
-              _showToast("success");
-            });
-          }
-          else if (response.statusCode == 401) {
-            var data = jsonDecode(response.body.toString());
-            _showToast(data['message']);
-          }
-          else {
-            var data = jsonDecode(response.body.toString());
-            if(data['message']!=null){
-              _showToast(data['message']);
-            }
-            else{
-              _showToast("Failed try again!");
-            }
-          }
-        } catch (e) {
-          Navigator.of(context).pop();
-          print(e.toString());
-        }
-      }
-    } on SocketException catch (_) {
-      Fluttertoast.cancel();
-      _showToast("No Internet Connection!");
-    }
-  }
-
-  void _showLoadingDialog(BuildContext context, String message) {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        // return VerificationScreen();
-        return Dialog(
-
-          child: Wrap(
-            children: [
-              Container(
-                  margin: const EdgeInsets.only(
-                      left: 15.0, right: 15.0, top: 20, bottom: 20),
-                  child: Center(
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 10,
-                        ),
-                        const CircularProgressIndicator(
-                          backgroundColor: Colors.appRed,
-                          strokeWidth: 5,
-                        ),
-                        const SizedBox(
-                          width: 12,
-                        ),
-                        Text(
-                          message,
-                          style: const TextStyle(fontSize: 20),
-                        )
-                      ],
-                    ),
-                  ))
-            ],
-            // child: VerificationScreen(),
-          ),
-        );
-      },
-    );
-  }
 
   _showToast(String message) {
     Fluttertoast.showToast(
