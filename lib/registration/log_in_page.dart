@@ -539,6 +539,7 @@ class _LogInScreenState extends State<LogInScreen> {
 
       sharedPreferences.setString(pref_user_Is_Teacher, userInfo['data']["is_teacher"].toString());
       sharedPreferences.setString(pref_user_Is_Student, userInfo['data']["is_student"].toString());
+      sharedPreferences.setString(pref_user_UUID, userInfo['data']["uid"].toString());
 
 
     } catch (e) {

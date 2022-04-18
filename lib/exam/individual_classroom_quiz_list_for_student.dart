@@ -14,6 +14,8 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
+import 'exam_for_student.dart';
+
 
 class IndividualClassroomQuizStudentScreen extends StatefulWidget {
   String classRoomId;
@@ -142,7 +144,7 @@ class _IndividualClassroomQuizStudentScreenState extends State<IndividualClassro
                                 height: 8,
                               ),
                               Expanded(
-                                child: _buildTeacherClassRoomList(),
+                                child: _buildQuizList(),
                               ),
                             ],
                           )),
@@ -229,7 +231,7 @@ class _IndividualClassroomQuizStudentScreenState extends State<IndividualClassro
                                   height: 8,
                                 ),
                                 Expanded(
-                                  child: _buildTeacherClassRoomList(),
+                                  child: _buildQuizList(),
                                   flex: 1,
                                 ),
                               ],
@@ -254,7 +256,7 @@ class _IndividualClassroomQuizStudentScreenState extends State<IndividualClassro
   }
 
 
-  Widget _buildTeacherClassRoomList() {
+  Widget _buildQuizList() {
     return ListView.builder(
         itemCount:
         teacherIndividualClassRoomQuizList == null ? 0 : teacherIndividualClassRoomQuizList.length,
@@ -323,7 +325,7 @@ class _IndividualClassroomQuizStudentScreenState extends State<IndividualClassro
             ),
             onTap: () {
              //  _showToast("Clicked Item $index");
-              Navigator.push(context,MaterialPageRoute(builder: (context)=> CreateQuizTeacherScreen(
+              Navigator.push(context,MaterialPageRoute(builder: (context)=> CreateExamScreen(
                   teacherIndividualClassRoomQuizList[index]["quiz_id"].toString(),
                   teacherIndividualClassRoomQuizList[index]["quiz_title"].toString())));
             },
