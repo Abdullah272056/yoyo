@@ -195,7 +195,7 @@ class _IndividualClassroomQuizStudentScreenState extends State<IndividualClassro
                   ] else ...[
 
                     Expanded(
-                      child: NoDataFound().noItemFound("Class Student Not Found!"),
+                      child: NoDataFound().noItemFound("Student not found in this class!"),
                     ),
                   ],
                 ],
@@ -534,8 +534,6 @@ class _IndividualClassroomQuizStudentScreenState extends State<IndividualClassro
       _showToast("No Internet Connection!");
     }
   }
-
-
 
   _showToast(String message) {
     Fluttertoast.showToast(

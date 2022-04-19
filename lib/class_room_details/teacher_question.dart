@@ -11,25 +11,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
-
-class CreateQuizTeacherScreen extends StatefulWidget {
+class CreateQuestionTeacherScreen extends StatefulWidget {
   String quizId;
   String classRoomName;
 
-
-  CreateQuizTeacherScreen(this.quizId,this.classRoomName);
+  CreateQuestionTeacherScreen(this.quizId,this.classRoomName);
 
   @override
-  State<CreateQuizTeacherScreen> createState() => _CreateQuizTeacherScreenState(this.quizId,this.classRoomName);
+  State<CreateQuestionTeacherScreen> createState() => _CreateQuestionTeacherScreenState(this.quizId,this.classRoomName);
 }
 
-class _CreateQuizTeacherScreenState extends State<CreateQuizTeacherScreen> {
+class _CreateQuestionTeacherScreenState extends State<CreateQuestionTeacherScreen> {
   String _quizId;
   String _classRoomName;
-  _CreateQuizTeacherScreenState(this._quizId,this._classRoomName);
+  _CreateQuestionTeacherScreenState(this._quizId,this._classRoomName);
 
   TextEditingController? _qiuizNameController = TextEditingController();
   TextEditingController? _classRoomNameUpdateController = TextEditingController();
@@ -46,6 +45,22 @@ class _CreateQuizTeacherScreenState extends State<CreateQuizTeacherScreen> {
 
   List questionList = [];
   var questionListResponse;
+
+
+
+  final _dateOfBirthValue = "--------";
+  final _dateOfBirthValueForBooking = "--------";
+  late DateTime _myStartDate, _myEndDate;
+  late TimeOfDay _mySelectedTime;
+  TimeOfDay selectedTime = TimeOfDay.now();
+  late TimeOfDay timeOfDay;
+  late DateTime _myStartDateForBooking, _myEndDateForBooking;
+  String _startDate = "select date";
+  String _selectedTimeText = "select time";
+
+  String _startDateForBooking = "select date";
+
+
 
   @override
   @mustCallSuper
@@ -112,6 +127,36 @@ class _CreateQuizTeacherScreenState extends State<CreateQuizTeacherScreen> {
                       ],
                     ))
               ] else ...[
+                Flex(direction: Axis.horizontal,
+                  children: [
+                    Expanded(child:
+                    Flex(
+
+                      direction: Axis.vertical,
+                      children: [
+                        Text("Date: "+"2022-04-18",
+                            style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w400)),
+                        Text("Time: "+"12:00",
+                            style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w400)),
+                        Text("Quiz Duration: "+"80 minute",
+                            style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w400)),
+                      ],
+                    ),),
+                    _buildCreateQuizTime()
+
+                  ],
+
+                ),
+
                 if (questionList != null &&
                     questionList.length > 0) ...[
                   Expanded(
@@ -133,7 +178,7 @@ class _CreateQuizTeacherScreenState extends State<CreateQuizTeacherScreen> {
                   )
                 ] else ...[
                   Expanded(
-                    child: NoDataFound().noItemFound("Class Room Not Found!"),
+                    child: NoDataFound().noItemFound("Question Not Found!"),
                   ),
                 ],
               ]
@@ -314,6 +359,275 @@ class _CreateQuizTeacherScreenState extends State<CreateQuizTeacherScreen> {
           );
         });
   }
+
+  Widget _buildCreateQuizTime() {
+    return InkWell(
+      child: Flex(
+
+        direction: Axis.horizontal,
+        children: [
+          Text("Create\nQuiz",
+              style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 23,
+                  fontWeight: FontWeight.w700)),
+        ],
+      ),
+      onTap: (){
+        _startDate = "select date";
+        _selectedTimeText = "select time";
+
+        showModalBottomSheet(
+          backgroundColor: Colors.white,
+          context: context,
+          builder: (BuildContext context) {
+            return StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  return SizedBox(
+                    height: 370,
+                    width: double.infinity,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 15, top: 5, right: 10, bottom: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Center(
+                            // child: Icon(Icons.arrow_drop_down_sharp,size: 40,),
+                            child: InkWell(
+                              child: Image.asset(
+                                "assets/images/drop_down.png",
+                                width: 40,
+                                height: 20,
+                              ),
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            "Please Select Date",
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            height: 12,
+                          ),
+
+                          SizedBox(
+                            height: 5,
+                          ),
+
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            "Quiz Start Date",
+                            style: TextStyle(fontSize: 16, color: Colors.black),
+                          ),
+                          SizedBox(
+                            height: 3,
+                          ),
+                          //cvbnm,
+                          _buildStartDate(
+                              fieldName: "Choose date",
+                              fieldValue: _dateOfBirthValue),
+
+
+
+                          SizedBox(
+                            height: 15,
+                          ),
+                          _buildStartTime(fieldName: "Choose time",
+                              fieldValue: _dateOfBirthValue),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          SizedBox(
+                            height: 50,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                  Colors.awsMixedColor,
+                                ),
+                                elevation: MaterialStateProperty.all(6),
+                                shape: MaterialStateProperty.all(
+                                  const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(5),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              child: const Text(
+                                'Create',
+                                style: TextStyle(
+                                  fontFamily: 'PT-Sans',
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              onPressed: () {
+                                //_showToast("clicked");
+                                setState(() {
+                                  // DateTime dt1 = DateTime.parse("2021-12-23 11:47:00");
+                                  // DateTime dt2 = DateTime.parse("2018-09-12 10:57:00");
+                                  //
+                                  // Duration diff = dt1.difference(dt2);
+                                  // print(diff.inDays);
+
+                                  // DateTime dt_start = DateTime.parse(_startDate);
+                                  //
+                                  // Duration diff = dt_end.difference(dt_start);
+                                  //
+                                  // if (diff.inDays > 0) {
+                                  //   //call get user cart id
+                                  //   _showToast("ok");
+                                  // } else if (diff.inDays <= 0) {
+                                  //   _showToast(
+                                  //       "please select correct date format");
+                                  // } else {
+                                  //   _showToast("please select date");
+                                  // }
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                });
+          },
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25.0),
+                topRight: Radius.circular(25.0)),
+          ),
+        );
+      },
+    );
+  }
+//start date
+  Widget _buildStartDate({
+    required String fieldName,
+    required String fieldValue,
+  }) {
+    return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return InkWell(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.blueGrey,
+                borderRadius: BorderRadius.circular(7),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    width: 10,
+                    height: 40,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        _startDate,
+                        style: const TextStyle(
+                          fontFamily: 'PT-Sans',
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            onTap: () async {
+              _myStartDate = (await showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime.now(),
+                lastDate: DateTime(DateTime.now().year + 1, DateTime.now().month,
+                    DateTime.now().day),
+                // lastDate: DateTime(2300),
+              ))!;
+              _startDate = _myStartDate.toString();
+              _startDate = DateFormat('yyyy-MM-dd').format(_myStartDate);
+              setState(() {});
+            },
+          );
+        });
+  }
+
+  Widget _buildStartTime({
+    required String fieldName,
+    required String fieldValue,
+  }) {
+    return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return InkWell(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.blueGrey,
+                borderRadius: BorderRadius.circular(7),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    width: 10,
+                    height: 40,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        _selectedTimeText,
+                        style: const TextStyle(
+                          fontFamily: 'PT-Sans',
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            onTap: () async {
+              timeOfDay = (await
+              showTimePicker(
+                context: context,
+                initialTime: selectedTime,
+                initialEntryMode: TimePickerEntryMode.input,
+                confirmText: "CONFIRM",
+                cancelText: "NOT NOW",
+                helpText: "Quiz TIME",
+              ))!;
+              _selectedTimeText="${timeOfDay.hour}:${timeOfDay.minute}:00";;
+              //_startDate = DateFormat('yyyy-MM-dd').format(selectedTime);
+              setState(() {
+
+              });
+            },
+          );
+        });
+  }
+
 
 
   Widget _buildExploreCityListShimmer() {

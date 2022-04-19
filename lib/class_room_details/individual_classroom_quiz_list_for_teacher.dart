@@ -205,7 +205,7 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
           child: Flex(
             direction: Axis.vertical,
             children: [
-              _buildLanguageMethod(),
+              _buildTabMethod(),
               if(listMethodCode==1)...[
                 if (shimmerStatus) ...[
 
@@ -246,7 +246,7 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
                   ] else ...[
 
                     Expanded(
-                      child: NoDataFound().noItemFound("Class Room Not Found!"),
+                      child: NoDataFound().noItemFound("Quiz Not Found!"),
                     ),
                   ],
                 ],
@@ -288,7 +288,7 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
                   ] else ...[
 
                     Expanded(
-                      child: NoDataFound().noItemFound("Class Student Not Found!"),
+                      child: NoDataFound().noItemFound("Student not found in this class!"),
                     ),
                   ],
                 ],
@@ -506,7 +506,7 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
             ),
             onTap: () {
              //  _showToast("Clicked Item $index");
-              Navigator.push(context,MaterialPageRoute(builder: (context)=> CreateQuizTeacherScreen(
+              Navigator.push(context,MaterialPageRoute(builder: (context)=> CreateQuestionTeacherScreen(
                   teacherIndividualClassRoomQuizList[index]["quiz_id"].toString(),
                   teacherIndividualClassRoomQuizList[index]["quiz_title"].toString())));
             },
@@ -833,7 +833,7 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
     });
   }
 
-  Widget _buildLanguageMethod() {
+  Widget _buildTabMethod() {
     return Row(
       children: [
         Expanded(
@@ -841,7 +841,7 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildBanglaLanguageButton(_quizButtonColor,_quizButtonTextColor),
+              _buildQuizListButton(_quizButtonColor,_quizButtonTextColor),
             ],
           ),
           flex: 1,
@@ -851,7 +851,7 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildEnglishLanguageButton(_studentButtonColor,_studentButtonTextColor),
+              _buildStudentListButton(_studentButtonColor,_studentButtonTextColor),
             ],
           ),
           flex: 1,
@@ -859,7 +859,7 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
       ],
     );
   }
-  Widget _buildBanglaLanguageButton(Color bgcolor,Color txtColor) {
+  Widget _buildQuizListButton(Color bgcolor,Color txtColor) {
     return SizedBox(
       height: 45,
       width: double.infinity,
@@ -899,7 +899,7 @@ class _IndividualClassroomQuizTeacherScreenState extends State<IndividualClassro
     );
   }
 
-  Widget _buildEnglishLanguageButton(Color color,Color txtColor) {
+  Widget _buildStudentListButton(Color color,Color txtColor) {
     return SizedBox(
       height: 45,
       width: double.infinity,

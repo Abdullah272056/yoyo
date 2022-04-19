@@ -37,3 +37,7 @@ String SUB_URL_API_STUDENT_GET_QUESTION_LIST = "exam-question-list/";
 String SUB_URL_API_STUDENT_SHORT_QUESTION_ANSWER_SUBMIT = "student-short-submit-answer/";
 String SUB_URL_API_STUDENT_MCQ_QUESTION_ANSWER_SUBMIT = "student-mcq-submit-answer/";
 
+
+//quiz id
+String SUB_URL_API_TEACHER_CREATE_QUIZ_TIME = "quiz-time/";
+

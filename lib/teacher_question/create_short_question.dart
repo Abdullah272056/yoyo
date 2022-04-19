@@ -205,7 +205,7 @@ class _CreateShortQuestionScreenState extends State<CreateShortQuestionScreen> {
 
             Navigator.of(context).pop();
             _showToast("Success");
-            Navigator.push(context,MaterialPageRoute(builder: (context)=> CreateQuizTeacherScreen(_quiz_id,_classRoomName)));
+            Navigator.push(context,MaterialPageRoute(builder: (context)=> CreateQuestionTeacherScreen(_quiz_id,_classRoomName)));
 
             var data = jsonDecode(response.body);
 
