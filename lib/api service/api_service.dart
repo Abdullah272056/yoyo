@@ -1,6 +1,6 @@
 
 String BASE_URL = "http://127.0.0.1:8002/api/";
-String BASE_URL_API = "http://192.168.1.13:8000/api/";
+String BASE_URL_API = "http://192.168.1.12:8000/api/";
 
 //registration
 String SUB_URL_API_SIGN_IN = "user-login/";

@@ -46,6 +46,8 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
   bool shimmerStatus = true;
   String questionType = "";
 
+  int responseStatusCode=0;
+
   List questionList = [];
   List optionList = [];
   var questionResponse;
@@ -120,145 +122,154 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
                       ],
                     ))
               ] else ...[
-               Flex(direction: Axis.horizontal,
-
-                  children: [
-                    Expanded(child: Flex(
-                      direction: Axis.horizontal,
-                      children: [
-                        Text((questionResponse["questions_answer_submitted"].toString()),
-                            style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 23,
-                                fontWeight: FontWeight.w700)),
-                        Text((" / "+questionResponse["total_questions"].toString()),
-                            style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 23,
-                                fontWeight: FontWeight.w700)),
-
-                      ],
-                    )),
-                    Expanded(child: Flex(
-                      direction: Axis.horizontal,
-                      children: [
-                      ],
-                    )),
-
-
-
-                  ],
-               ),
-                if (questionList.length > 0) ...[
-                      if(questionType=="1")...{
-                        Padding(
-                          padding: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 00),
-                          child: Flex(direction: Axis.horizontal,
-                            children: [
-                              Text(("Q: "+questionList[0]["question_name"].toString()),
-                                  style: TextStyle(
-                                      color: Colors.black87,
-                                      fontSize: 23,
-                                      fontWeight: FontWeight.w700)),
-                            ],
-                          ),
-
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-                            child:Flex(
-                              direction: Axis.vertical,
-                              children: [
-
-                                Expanded(child: Container(
-                                  color: Colors.transparent,
-                                  child: Theme(
-                                    data: Theme.of(context).copyWith(
-                                      unselectedWidgetColor: Colors.appRed,
-                                    ),
-                                    child: Column(
-                                      children: [
-
-                                        ListView.builder(
-                                          itemCount: optionList == null ? 0 : optionList.length,
-                                          shrinkWrap: true,
-                                          physics: const NeverScrollableScrollPhysics(),
-                                          itemBuilder: (context, index) {
-                                            return RadioListTile<int>(
-                                                value: index,
-                                                activeColor: Colors.appRed,
-                                                title: Text(
-                                                  optionList[index]["mcq_option_answer"].toString(),
-                                                  style: TextStyle(fontSize: 16),
-                                                ),
-                                                groupValue: selectedValue,
-                                                onChanged: (value) => setState(() {
-                                                  selectedValue = index;
-                                                  // selected_question_mcq_options_id=optionList[index]["question_mcq_options_id"];
-                                                })
-                                            );
-                                          },
-                                        ),
-
-
-                                      ],
-                                    ),
-                                  ),
-                                ),),
-                                _buildNextButton_mcq_question(questionList[0]["question_id"].toString()),
-
-                                SizedBox(height: 15,)
-
-                              ],
-                            ),
-
-                          ),
-                        )
-                      }
-                      else if(questionType=="2")...{
-                        Padding(
-                          padding: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 00),
-                          child: Flex(direction: Axis.horizontal,
-                            children: [
-                              Text(("Q: "+questionList[0]["question_name"].toString()),
-                                  style: TextStyle(
-                                      color: Colors.black87,
-                                      fontSize: 23,
-                                      fontWeight: FontWeight.w700)),
-                            ],
-                          ),
-
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-                            child:Flex(
-                              direction: Axis.vertical,
-                              children: [
-
-                                Expanded(child: _buildShortQuestionAnswerTextField()),
-                                _buildNextButton_short_question(questionList[0]["question_id"].toString()),
-
-                                SizedBox(height: 15,)
-
-                              ],
-                            ),
-
-                          ),
-                        )
-                      }
-                      else...{
-                          Expanded(
-                            child: NoDataFound().noItemFound("Question Not Found! try again! "),
-                          ),
-                        }
-
-                ] else ...[
+                if(questionList.isEmpty || questionList==null||questionList.length <= 0)...{
                   Expanded(
-                    child: NoDataFound().noItemFound("Question Not Found!"),
+                    child: NoDataFound().noItemFound(questionResponse["message"]),
                   ),
-                ],
+                }
+                else...{
+                  if (questionList.length > 0) ...[
+                    Flex(direction: Axis.horizontal,
+
+                      children: [
+                        Expanded(child: Flex(
+                          direction: Axis.horizontal,
+                          children: [
+                            Text(((questionResponse["questions_answer_submitted"]+1).toString()),
+                                style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 23,
+                                    fontWeight: FontWeight.w700)),
+                            Text((" / "+questionResponse["total_questions"].toString()),
+                                style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 23,
+                                    fontWeight: FontWeight.w700)),
+
+                          ],
+                        )),
+                        Expanded(child: Flex(
+                          direction: Axis.horizontal,
+                          children: [
+                          ],
+                        )),
+
+
+
+                      ],
+                    ),
+                    if(questionType=="1")...{
+                      Padding(
+                        padding: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 00),
+                        child: Flex(direction: Axis.horizontal,
+                          children: [
+                            Text(("Q: "+questionList[0]["question_name"].toString()),
+                                style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 23,
+                                    fontWeight: FontWeight.w700)),
+                          ],
+                        ),
+
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                          child:Flex(
+                            direction: Axis.vertical,
+                            children: [
+
+                              Expanded(child: Container(
+                                color: Colors.transparent,
+                                child: Theme(
+                                  data: Theme.of(context).copyWith(
+                                    unselectedWidgetColor: Colors.appRed,
+                                  ),
+                                  child: Column(
+                                    children: [
+
+                                      ListView.builder(
+                                        itemCount: optionList == null ? 0 : optionList.length,
+                                        shrinkWrap: true,
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        itemBuilder: (context, index) {
+                                          return RadioListTile<int>(
+                                              value: index,
+                                              activeColor: Colors.appRed,
+                                              title: Text(
+                                                optionList[index]["mcq_option_answer"].toString(),
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                              groupValue: selectedValue,
+                                              onChanged: (value) => setState(() {
+                                                selectedValue = index;
+                                                // selected_question_mcq_options_id=optionList[index]["question_mcq_options_id"];
+                                              })
+                                          );
+                                        },
+                                      ),
+
+
+                                    ],
+                                  ),
+                                ),
+                              ),),
+                              _buildNextButton_mcq_question(questionList[0]["question_id"].toString()),
+
+                              SizedBox(height: 15,)
+
+                            ],
+                          ),
+
+                        ),
+                      )
+                    }
+                    else if(questionType=="2")...{
+                      Padding(
+                        padding: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 00),
+                        child: Flex(direction: Axis.horizontal,
+                          children: [
+                            Text(("Q: "+questionList[0]["question_name"].toString()),
+                                style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 23,
+                                    fontWeight: FontWeight.w700)),
+                          ],
+                        ),
+
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                          child:Flex(
+                            direction: Axis.vertical,
+                            children: [
+
+                              Expanded(child: _buildShortQuestionAnswerTextField()),
+                              _buildNextButton_short_question(questionList[0]["question_id"].toString()),
+
+                              SizedBox(height: 15,)
+
+                            ],
+                          ),
+
+                        ),
+                      )
+                    }
+                    else...{
+                        Expanded(
+                          child: NoDataFound().noItemFound("Question Not Found! try again! "),
+                        ),
+                      }
+
+                  ] else ...[
+
+                    Expanded(
+                      child: NoDataFound().noItemFound("Question Not Found!"),
+                    ),
+                  ],
+                }
+
               ]
             ],
           ),
@@ -343,27 +354,37 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
               "quiz_id": "$_quizId",
             }
           );
+          shimmerStatus = false;
          // _showToast(response.statusCode.toString());
           if (response.statusCode == 200) {
+
             var data = jsonDecode(response.body);
             questionResponse = jsonDecode(response.body);
-            questionList=data["data"];
-            optionList=data["data"][0]["questions_options"];
-            shimmerStatus = false;
-            if(data["data"][0]["is_mcq_questions"].toString()=="true"){
-              questionType="1";
 
+            if( questionResponse["question_is_null"].toString() !="1"){
+
+              questionList=data["data"];
+              optionList=data["data"][0]["questions_options"];
+
+
+              if(data["data"][0]["is_mcq_questions"].toString()=="true"){
+                questionType="1";
+
+              }else{
+                questionType="2";
+              }
             }else{
-              questionType="2";
+              _showToast("exam end");
             }
+
+
               setState(() {
 
               });
 
           }
           else {
-            Fluttertoast.cancel();
-            _showToast("Failed");
+            responseStatusCode=
           }
         } catch (e) {
           Fluttertoast.cancel();
@@ -557,6 +578,7 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
               setState(() {
                 Navigator.of(context).pop();
                 _showToast("Success");
+                otpEditTextController?.clear();
                 _getQuestionList(_accessToken);
               });
 
@@ -580,6 +602,7 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
       _showToast("No Internet Connection!");
     }
   }
+
   _submitMCQQuestion(String answer,questionId ) async {
     try {
       final result = await InternetAddress.lookup('example.com');
@@ -602,6 +625,7 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
           if (response.statusCode == 200){
               setState(() {
                 Navigator.of(context).pop();
+                Fluttertoast.cancel();
                 _showToast("Success");
                 _getQuestionList(_accessToken);
 
@@ -619,7 +643,7 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
           Navigator.of(context).pop();
           Fluttertoast.cancel();
           print(e.toString());
-          _showToast("failed১");
+          _showToast("failed");
         }
       }
     } on SocketException catch (e) {
@@ -654,5 +678,6 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
 
     });
   }
+
 
 }
