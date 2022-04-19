@@ -153,7 +153,7 @@ class _IndividualClassroomQuizStudentScreenState extends State<IndividualClassro
                   ] else ...[
 
                     Expanded(
-                      child: NoDataFound().noItemFound("Class Room Not Found!"),
+                      child: NoDataFound().noItemFound("Quiz Not Found!"),
                     ),
                   ],
                 ],
